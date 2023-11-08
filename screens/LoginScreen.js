@@ -6,7 +6,7 @@ const LoginScreen = () => {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="아이디(이메일)을 입력해 주세요"
+        placeholder="아이디를 입력해 주세요"
         keyboardType="email-address"
       />
       <TextInput
@@ -17,9 +17,9 @@ const LoginScreen = () => {
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>로그인</Text>
       </TouchableOpacity>
-      <Text style={styles.footerText}>
+      <TouchableOpacity style={styles.footerButton}>
         MyDesigner가 처음이시라면, 회원가입이 필요해요.
-      </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
   },
-  footerText: {
+  footerButton: {
     marginTop: 20,
     color: 'gray',
   },
