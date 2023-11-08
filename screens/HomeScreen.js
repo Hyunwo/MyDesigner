@@ -11,16 +11,16 @@ const HomeScreen = () => {
       />
       <View style={styles.menuContainer}>
         <TouchableOpacity style={styles.menuItem}>
-          <Image source={require('home.png')} style={styles.menuImage} />
-          <Text style={styles.menuText}>디자이너 및 검색</Text>
+          <Image source={require("../assets/save.png")} style={styles.imagebutton} />
+          <Text style={styles.text}>디자이너 및 검색</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
-          <Image source={require('home.png')} style={styles.menuImage} />
-          <Text style={styles.menuText}>내 근처 디자이너 찾기</Text>
+          <Image source={require("../assets/home.png")} style={styles.imagebutton} />
+          <Text style={styles.text}>내 근처 디자이너 찾기</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
-          <Image source={require('home.png')} style={styles.menuImage} />
-          <Text style={styles.menuText}>이벤트</Text>
+          <Image source={require("../assets/home.png")} style={styles.imagebutton} />
+          <Text style={styles.text}>이벤트</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.button}>
@@ -58,12 +58,12 @@ const styles = StyleSheet.create({
   menuItem: {
     alignItems: 'center',
   },
-  menuImage: {
+  imagebutton: {
     width: 50,
     height: 50,
     // 이미지의 스타일링은 필요에 맞게 조정
   },
-  menuText: {
+  text: {
     marginTop: 5,
   },
   button: {
