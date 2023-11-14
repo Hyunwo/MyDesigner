@@ -1,39 +1,38 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firebaseConfig";
 
-const SignupScreen = () => {
-  const [email, setEmail] = useState('');
+const SignupScreen = ({ navigation }) => {
+  const [email, setEmail] = useState(''); // 이메일과 비밀번호를 위한 상태 변수
   const [password, setPassword] = useState('');
 
-  const handleEmailChange = (text) => {
+  const handleEmailChange = (text) => { // 이메일 입력 변경 처리 함수
     setEmail(text);
   };
 
-  const handlePasswordChange = (text) => {
+  const handlePasswordChange = (text) => { // 비밀번호 입력 변경 처리 함수
     setPassword(text);
   };
-
-  const handleSignUp = () => {
-    // 여기서 이메일과 비밀번호 검증 로직을 추가할 수 있습니다.
-    // 예를 들어, 이메일 형식이 맞는지, 비밀번호가 충분히 강력한지 등을 검사할 수 있습니다.
-
-    // 이 예제에서는 간단히 콘솔에 출력만 합니다.
-    console.log(`Email: ${email}, Password: ${password}`);
-    
-    // 실제 애플리케이션에서는 여기서 회원가입 요청을 백엔드 API로 보냅니다.
-    // 예:
-    // axios.post('/signup', { email, password })
-    //   .then(response => {
-    //     // 회원가입 성공 처리
-    //   })
-    //   .catch(error => {
-    //     // 오류 처리
-    //   });
-
-    // 임시로 회원가입 성공 알림을 띄웁니다.
-    Alert.alert('회원가입 성공!', `환영합니다, ${email}!`);
+  
+  // 회원가입 처리 함수
+  const register = async () => {
+    try {
+      const user = await createUserWithEmailAndPassword( // Firebase Auth를 사용한 회원가입 시도
+          auth,
+          email,
+          password
+      );
+      console.log(user);
+      Alert.alert('회원가입 성공!', `환영합니다, ${email}!`,); // 회원가입 성공 후 Alert 표시 및 로그인 화면으로 이동
+      navigation.navigate('Login');
+    } catch (error) { // 회원가입 실패 시 오류 메시지 표시
+        console.log(error.message);
+        Alert.alert('비밀번호는 6자리 이상 입력해주세요!');
+    }
   };
 
+  // UI 렌더링 부분
   return (
     <View style={styles.container}>
       <TextInput
@@ -51,7 +50,7 @@ const SignupScreen = () => {
         onChangeText={handlePasswordChange}
         secureTextEntry
       />
-      <Button title="회원가입" onPress={handleSignUp} />
+      <Button title="회원가입" onPress={register} />
     </View>
   );
 };
