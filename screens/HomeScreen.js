@@ -5,21 +5,17 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MyDesigner</Text>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="찾으시는 정보가 있으세요?"
-      />
       <View style={styles.menuContainer}>
         <TouchableOpacity style={styles.menuItem}>
-          <Image source={require("../assets/save.png")} style={styles.imagebutton} />
+          <Image source={require("../assets/hairstyle.png")} style={styles.imagebutton} />
           <Text style={styles.text}>디자이너 및 검색</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
-          <Image source={require("../assets/home.png")} style={styles.imagebutton} />
+          <Image source={require("../assets/location.png")} style={styles.imagebutton} />
           <Text style={styles.text}>내 근처 디자이너 찾기</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
-          <Image source={require("../assets/home.png")} style={styles.imagebutton} />
+          <Image source={require("../assets/event.png")} style={styles.imagebutton} />
           <Text style={styles.text}>이벤트</Text>
         </TouchableOpacity>
       </View>
