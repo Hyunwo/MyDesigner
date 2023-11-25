@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-const MyInfoScreen = () => {
+const MyInfoScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
@@ -29,6 +29,10 @@ const MyInfoScreen = () => {
     }
   };
 
+  const openSettings = () => {
+    navigation.navigate('Settings');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.profileSection}>
@@ -43,6 +47,12 @@ const MyInfoScreen = () => {
           <Text style={styles.editButtonText}>프로필 수정</Text>
         </TouchableOpacity>
       </View>
+      <TouchableOpacity style={styles.settingsButton} onPress={openSettings}>
+        <Image
+          source={require('../assets/settings.png')}
+          style={styles.settingsIcon}
+        />
+      </TouchableOpacity>
       <TouchableOpacity style={styles.reservationButton} onPress={() => console.log('예약 내역')}>
         <Text style={styles.reservationButtonText}>예약 내역</Text>
       </TouchableOpacity>
@@ -96,6 +106,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#000000',
     textAlign: 'center',
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : 40, // iOS와 Android 상태바 높이가 다름
+    right: 15,
+  },
+  settingsIcon: {
+    width: 24,
+    height: 24,
   },
 });
 
