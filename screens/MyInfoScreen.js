@@ -1,63 +1,50 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, StatusBar } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
 const MyInfoScreen = () => {
   const [photo, setPhoto] = useState(null);
 
-  const handleChoosePhoto = () => {
-    const options = {
-      noData: true,
-    };
-
-    ImagePicker.launchImageLibrary(options, response => {
-      if (response.uri) {
-        setPhoto(response.uri);
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
       }
+    })();
+  }, []);
+
+  const handleChoosePhoto = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     });
-  };
 
-  // 설정 버튼 클릭 이벤트 핸들러
-  const onSettingsPress = () => {
-    console.log('설정 버튼 클릭됨');
-    navigation.navigate('Settings');
-  };
-
-  // 프로필 수정 버튼 클릭 이벤트 핸들러
-  const onEditProfilePress = () => {
-    console.log('프로필 수정하기');
-    // 여기에 프로필 수정 로직을 구현하세요.
-  };
-
-  // 연락 내역 버튼 클릭 이벤트 핸들러
-  const onContactHistoryPress = () => {
-    console.log('예약 내역 보기');
-    navigation.navigate('ReservationList');
+    if (!result.cancelled) {
+      setPhoto(result.uri);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f9f9f9" />
-      <View style={styles.headerContainer}>
-        <Image
-          source={require("../assets/profile.png")} // 프로필 이미지 파일 경로를 입력하세요
-          style={styles.profilePic}
-        />
-        <Text style={styles.userName}>김철수</Text>
-        <TouchableOpacity onPress={onEditProfilePress}>
-          <Text style={styles.editProfile}>프로필 수정</Text>
+      <View style={styles.profileSection}>
+        <TouchableOpacity onPress={handleChoosePhoto}>
+          <Image
+            source={photo ? { uri: photo } : require('../assets/profile.png')} // Provide your default avatar image
+            style={styles.avatar}
+          />
+        </TouchableOpacity>
+        <Text style={styles.name}>김재현</Text>
+        <TouchableOpacity style={styles.editButton} onPress={() => console.log('프로필 수정')}>
+          <Text style={styles.editButtonText}>프로필 수정</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.infoContainer}>
-        <TouchableOpacity style={styles.button} onPress={onContactHistoryPress}>
-          <Text style={styles.buttonText}>예약 내역</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity style={styles.settingsButton} onPress={onSettingsPress}>
-        <Image
-          source={require('../assets/settings.png')}
-          style={styles.settingsIcon}
-        />
+      <TouchableOpacity style={styles.reservationButton} onPress={() => console.log('예약 내역')}>
+        <Text style={styles.reservationButtonText}>예약 내역</Text>
       </TouchableOpacity>
     </View>
   );
@@ -66,55 +53,49 @@ const MyInfoScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: StatusBar.currentHeight, // 상태바 높이에 맞춰서 Padding을 추가합니다.
+    backgroundColor: '#FFFFFF',
   },
-  headerContainer: {
+  profileSection: {
     alignItems: 'center',
-    paddingVertical: 20,
+    marginBottom: 30,
   },
-  profilePic: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#eaeaea',
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#C4C4C4', // A placeholder color
   },
-  userName: {
-    fontSize: 22,
-    fontWeight: 'bold',
+  name: {
+    fontSize: 24,
+    fontWeight: '600',
     marginTop: 10,
+    marginBottom: 5,
   },
-  editProfile: {
-    fontSize: 16,
-    color: '#2e64e5',
-    marginTop: 5,
-  },
-  infoContainer: {
-    marginTop: 20,
-    width: '100%',
-    alignItems: 'center',
-  },
-  button: {
-    backgroundColor: '#eaeaea',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+  editButton: {
+    marginTop: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 5,
-    marginTop: 10,
+    backgroundColor: '#E8E8E8', // A light grey background color for the button
   },
-  buttonText: {
-    fontSize: 18,
-    color: '#000',
+  editButtonText: {
+    fontSize: 16,
+    color: '#000000',
   },
-  settingsButton: {
-    position: 'absolute',
-    top: StatusBar.currentHeight ? StatusBar.currentHeight + 10 : 10, // 상태바 높이에 맞춰서 위치를 조정합니다.
-    right: 10,
-    padding: 10,
+  reservationButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+    backgroundColor: '#E8E8E8', // A light grey background color for the button
+    alignSelf: 'stretch',
+    marginHorizontal: 20,
   },
-  settingsIcon: {
-    width: 24,
-    height: 24,
+  reservationButtonText: {
+    fontSize: 20,
+    color: '#000000',
+    textAlign: 'center',
   },
 });
 
