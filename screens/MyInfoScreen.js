@@ -1,63 +1,104 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, StatusBar } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 
-const MyInfoScreen = () => {
+import { storage } from '../config/firebaseConfig';
+import { ref as firebaseStorageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { firestore } from '../config/firebaseConfig';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { auth } from '../config/firebaseConfig';
+
+const MyInfoScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState(null);
 
-  const handleChoosePhoto = () => {
-    const options = {
-      noData: true,
-    };
-
-    ImagePicker.launchImageLibrary(options, response => {
-      if (response.uri) {
-        setPhoto(response.uri);
+  // 이미지 접근 권한
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('이미지를 업로드하려면 사진첩 권한이 필요합니다.');
+          //return false
+        }
+        //return true
       }
+    })();
+  }, []);
+
+  // Firebase Firestore에서 이미지 URL 가져오기
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      if (auth.currentUser) {
+        const firestoreRef = doc(firestore, `users/${auth.currentUser.uid}`);
+        const docSnap = await getDoc(firestoreRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          if(userData.profileImageUrl) {
+            setPhoto(userData.profileImageUrl);
+          }
+        }
+      }
+    };
+    fetchProfileImage();
+  }, []);
+
+
+  const handleChoosePhoto = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
     });
-  };
 
-  // 설정 버튼 클릭 이벤트 핸들러
-  const onSettingsPress = () => {
-    console.log('설정 버튼 클릭됨');
-    navigation.navigate('Settings');
-  };
+    if (!result.canceled) {
+      // Firebase Storage에 이미지 업로드
+      const uri = result.assets[0].uri;
+      const blob = await (await fetch(uri)).blob();
 
-  // 프로필 수정 버튼 클릭 이벤트 핸들러
-  const onEditProfilePress = () => {
-    console.log('프로필 수정하기');
-    // 여기에 프로필 수정 로직을 구현하세요.
-  };
+      const imageRef = firebaseStorageRef(storage, `profile/${auth.currentUser.uid}`);
+      await uploadBytes(imageRef, blob);
 
-  // 연락 내역 버튼 클릭 이벤트 핸들러
-  const onContactHistoryPress = () => {
-    console.log('예약 내역 보기');
-    navigation.navigate('ReservationList');
+      // 업로드된 이미지 URL 가져오기
+      const downloadURL = await getDownloadURL(imageRef);
+
+      // Firestore에 이미지 URL 저장
+      const firestoreRef = doc(firestore, `users/${auth.currentUser.uid}`);
+      await setDoc(firestoreRef, { profileImageUrl: downloadURL }, { merge: true });
+      
+      // 상태 업데이트해서 UI에 표시
+      setPhoto(downloadURL);
+    }
+   };
+
+  const openSettings = () => {
+    //navigation.navigate('Settings');
+    navigation.navigate('Home');
   };
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#f9f9f9" />
-      <View style={styles.headerContainer}>
-        <Image
-          source={require("../assets/profile.png")} // 프로필 이미지 파일 경로를 입력하세요
-          style={styles.profilePic}
-        />
-        <Text style={styles.userName}>김철수</Text>
-        <TouchableOpacity onPress={onEditProfilePress}>
-          <Text style={styles.editProfile}>프로필 수정</Text>
+      <View style={styles.profileSection}>
+        <TouchableOpacity onPress={handleChoosePhoto}>
+          <Image
+            source={photo ? { uri: photo } : require('../assets/profile.png')} // Provide your default avatar image
+            style={styles.avatar}
+          />
+        </TouchableOpacity>
+        <Text style={styles.name}>김재현</Text>
+        <TouchableOpacity style={styles.editButton} onPress={() => console.log('프로필 수정')}>
+          <Text style={styles.editButtonText}>프로필 수정</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.infoContainer}>
-        <TouchableOpacity style={styles.button} onPress={onContactHistoryPress}>
-          <Text style={styles.buttonText}>예약 내역</Text>
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity style={styles.settingsButton} onPress={onSettingsPress}>
+      <TouchableOpacity style={styles.settingsButton} onPress={openSettings}>
         <Image
-          source={require('../assets/settings.png')}
+          source={require('../assets/my info.png')}
           style={styles.settingsIcon}
         />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.reservationButton} onPress={() => console.log('예약 내역')}>
+        <Text style={styles.reservationButtonText}>예약 내역</Text>
       </TouchableOpacity>
     </View>
   );
@@ -66,51 +107,54 @@ const MyInfoScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: StatusBar.currentHeight, // 상태바 높이에 맞춰서 Padding을 추가합니다.
+    backgroundColor: '#FFFFFF',
   },
-  headerContainer: {
+  profileSection: {
     alignItems: 'center',
-    paddingVertical: 20,
+    marginBottom: 30,
   },
-  profilePic: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#eaeaea',
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#C4C4C4', // A placeholder color
   },
-  userName: {
-    fontSize: 22,
-    fontWeight: 'bold',
+  name: {
+    fontSize: 24,
+    fontWeight: '600',
     marginTop: 10,
+    marginBottom: 5,
   },
-  editProfile: {
-    fontSize: 16,
-    color: '#2e64e5',
-    marginTop: 5,
-  },
-  infoContainer: {
-    marginTop: 20,
-    width: '100%',
-    alignItems: 'center',
-  },
-  button: {
-    backgroundColor: '#eaeaea',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+  editButton: {
+    marginTop: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 5,
-    marginTop: 10,
+    backgroundColor: '#E8E8E8', // A light grey background color for the button
   },
-  buttonText: {
-    fontSize: 18,
-    color: '#000',
+  editButtonText: {
+    fontSize: 16,
+    color: '#000000',
+  },
+  reservationButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+    backgroundColor: '#E8E8E8', // A light grey background color for the button
+    alignSelf: 'stretch',
+    marginHorizontal: 20,
+  },
+  reservationButtonText: {
+    fontSize: 20,
+    color: '#000000',
+    textAlign: 'center',
   },
   settingsButton: {
     position: 'absolute',
-    top: StatusBar.currentHeight ? StatusBar.currentHeight + 10 : 10, // 상태바 높이에 맞춰서 위치를 조정합니다.
-    right: 10,
-    padding: 10,
+    top: Platform.OS === 'ios' ? 60 : 40, // iOS와 Android 상태바 높이가 다름
+    right: 15,
   },
   settingsIcon: {
     width: 24,
