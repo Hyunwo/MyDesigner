@@ -7,6 +7,12 @@ import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import HomeScreen from './screens/HomeScreen'; // HomeScreen 컴포넌트를 별도의 파일로 분리해야 함
 import SearchScreen from './screens/SearchScreen';
+import ReserveScreen from './screens/ReserveScreen';
+import MapScreen from './screens/MapScreen';
+import MyInfoScreen from './screens/MyInfoScreen';
+import SettingsScreen from './screens/SettingsScreen';
+import ReservationListScreen from './screens/ReservationListScreen';
+import DLoginScreen from './screens/DLoginScreen';
 
 const Stack = createStackNavigator();
 //const Tab = createBottomTabNavigator();
@@ -46,11 +52,17 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
         <Stack.Screen name="MyDesisgner" component={MainScreen} />
-        <Stack.Screen name="MyDesisgner" component={LoginScreen} />
-        <Stack.Screen name="회원가입" component={SignupScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="MainTab" component={MainTabScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="디자이너 및 샵 검색" component={SearchScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="SignUp" component={SignupScreen} />
+        {/* <Stack.Screen name="MainTab" component={MainTabScreen} options={{ headerShown: false }} /> */}
+        <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="Reserve" component={ReserveScreen} />
+        <Stack.Screen name="Map" component={MapScreen} />
+        <Stack.Screen name="MyInfo" component={MyInfoScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="ReservationList" component={ReservationListScreen} />
+        <Stack.Screen name="DLogin" component={DLoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
