@@ -10,6 +10,7 @@ import { auth } from '../config/firebaseConfig';
 
 const MyInfoScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState(null);
+  const [name, setName] = useState('');
 
   // 이미지 접근 권한
   useEffect(() => {
@@ -27,7 +28,7 @@ const MyInfoScreen = ({ navigation }) => {
 
   // Firebase Firestore에서 이미지 URL 가져오기
   useEffect(() => {
-    const fetchProfileImage = async () => {
+    const fetchProfileImageAndName = async () => {
       if (auth.currentUser) {
         const firestoreRef = doc(firestore, `users/${auth.currentUser.uid}`);
         const docSnap = await getDoc(firestoreRef);
@@ -37,12 +38,14 @@ const MyInfoScreen = ({ navigation }) => {
           if(userData.profileImageUrl) {
             setPhoto(userData.profileImageUrl);
           }
+          if(userData.name){
+            setName(userData.name);
+          }
         }
       }
     };
-    fetchProfileImage();
+    fetchProfileImageAndName();
   }, []);
-
 
   const handleChoosePhoto = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -86,7 +89,7 @@ const MyInfoScreen = ({ navigation }) => {
             style={styles.avatar}
           />
         </TouchableOpacity>
-        <Text style={styles.name}>김재현</Text>
+        <Text style={styles.name}>{name}</Text>
         <TouchableOpacity style={styles.editButton} onPress={() => console.log('프로필 수정')}>
           <Text style={styles.editButtonText}>프로필 수정</Text>
         </TouchableOpacity>

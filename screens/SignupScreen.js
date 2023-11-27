@@ -5,8 +5,9 @@ import { doc, setDoc } from 'firebase/firestore'
 import { auth, firestore } from '../config/firebaseConfig'
 
 const SignupScreen = ({ navigation }) => {
-  const [email, setEmail] = useState(''); // 이메일과 비밀번호를 위한 상태 변수
+  const [email, setEmail] = useState(''); // 이메일과 비밀번호,이름을 위한 상태 변수
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
 
   const handleSignup = () => {
     createUserWithEmailAndPassword(auth, email, password)
@@ -16,6 +17,7 @@ const SignupScreen = ({ navigation }) => {
         const user = userCredentials.user;
         return setDoc(doc(firestore, 'users', user.uid), {
           email: email,
+          name: name,
         })
       } else {
         throw new Error('userCredentials are not available')
@@ -31,6 +33,13 @@ const SignupScreen = ({ navigation }) => {
   // UI 렌더링 부분
   return (
     <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="이름"
+        value={name}
+        onChangeText={setName}
+        autoCapitalize="none"
+      />
       <TextInput
         style={styles.input}
         placeholder="이메일"

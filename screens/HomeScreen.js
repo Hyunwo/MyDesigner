@@ -14,13 +14,13 @@ const HomeScreen = ({ navigation }) => {
           <Image source={require("../assets/location.png")} style={styles.imagebutton} />
           <Text style={styles.text}>내 근처 디자이너 찾기</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('MyInfo')}>
+        <TouchableOpacity style={styles.menuItem}>
           <Image source={require("../assets/event.png")} style={styles.imagebutton} />
           <Text style={styles.text}>이벤트</Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>확인 및 품절 내용</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyInfo')}>
+        <Text style={styles.buttonText}>내정보</Text>
       </TouchableOpacity>
     </View>
     // 추가적으로 하단 탭 바 네비게이션을 표시하는 컴포넌트가 필요할 것입니다.
@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imagebutton: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     // 이미지의 스타일링은 필요에 맞게 조정
   },
   text: {
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 50,
-    backgroundColor: '#007AFF',
+    backgroundColor: 'skyblue',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
