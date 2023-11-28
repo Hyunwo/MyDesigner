@@ -76,8 +76,7 @@ const MyInfoScreen = ({ navigation }) => {
    };
 
   const openSettings = () => {
-    //navigation.navigate('Settings');
-    navigation.navigate('Home');
+    navigation.navigate('Settings');
   };
 
   return (
@@ -96,7 +95,7 @@ const MyInfoScreen = ({ navigation }) => {
       </View>
       <TouchableOpacity style={styles.settingsButton} onPress={openSettings}>
         <Image
-          source={require('../assets/my info.png')}
+          source={require('../assets/settings.png')}
           style={styles.settingsIcon}
         />
       </TouchableOpacity>

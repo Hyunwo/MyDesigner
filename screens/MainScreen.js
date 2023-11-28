@@ -8,7 +8,7 @@ function MainScreen({ navigation }) {
 
       <TouchableOpacity
         style={[styles.button, styles.firstButton]}
-        onPress={() => navigation.navigate('Login')}
+        onPress={() => navigation.navigate('DSignup')}
       >
         <Text style={styles.buttonText}>디자이너</Text>
       </TouchableOpacity>
