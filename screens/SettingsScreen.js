@@ -14,7 +14,7 @@ const SettingsScreen = ({ navigation }) => {
   const handleSettingsOption = (key) => {
     switch (key) {
       case 'logout':
-        // 로그아웃 처리 로직을 구현하세요. 예: 인증 토큰을 삭제하거나 상태를 업데이트합니다.
+        // 로그아웃 처리 로직 구현. 예: 인증 토큰을 삭제하거나 상태를 업데이트합니다.
         Alert.alert(
           '로그아웃',
           '정말로 로그아웃 하시겠습니까?',
@@ -35,7 +35,7 @@ const SettingsScreen = ({ navigation }) => {
           ],
           { cancelable: false},
         );
-      // 다른 키에 대한 처리 로직을 추가하세요.
+      // 다른 키에 대한 처리 로직 추가
       default:
         // 기본적으로 설정 항목의 key와 동일한 이름의 화면으로 네비게이션합니다.
         navigation.navigate(key);
@@ -44,7 +44,7 @@ const SettingsScreen = ({ navigation }) => {
   };
 
   const handleUserSecession = () => {
-    // 여기에 회원탈퇴 로직을 구현하세요.
+    // 여기 회원탈퇴 로직 구현
     // 예를 들어, Firebase auth에서 사용자를 삭제하거나, 서버에 탈퇴 요청을 보냅니다.
     
     // 로그인 정보 삭제 및 탈퇴 처리 후 메인 화면으로 네비게이션
