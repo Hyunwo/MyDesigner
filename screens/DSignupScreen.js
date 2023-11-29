@@ -6,14 +6,15 @@ import { auth, firestore } from '../config/firebaseConfig'
 
 const DSignupScreen = ({ navigation }) => {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [gender, setGender] = useState('');
   const [phone, setPhone] = useState('');
-  const [phoneAuth, setPhoneAuth] = useState('');
   const [region, setRegion] = useState('');
   const [shopName, setShopName] = useState('');
 
   const handleSignup = () => {
-    createUserWithEmailAndPassword(name, gender, phone, phoneAuth, region, shopName)
+    createUserWithEmailAndPassword(auth, name, email, password, gender, phone, region, shopName)
     .then((userCredentials) => {
       if (userCredentials && userCredentials.user){
         // Firebase에 사용자 정보 저장
@@ -27,7 +28,7 @@ const DSignupScreen = ({ navigation }) => {
     })
     .then(() => {
       Alert.alert('회원가입이 완료되었습니다!');
-      navigation.navigate('DLogin')
+      navigation.navigate('Login')
     })
     .catch(error => Alert.alert('Error', error.message))
   }
@@ -40,6 +41,22 @@ const DSignupScreen = ({ navigation }) => {
         placeholder="이름"
         value={name}
         onChangeText={setName}
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="이메일"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="비밀번호"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
       />
       <Picker
         selectedValue={gender}
@@ -55,12 +72,6 @@ const DSignupScreen = ({ navigation }) => {
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="전화번호 인증"
-        value={phoneAuth}
-        onChangeText={setPhoneAuth}
       />
       <TextInput
         style={styles.input}
