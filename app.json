@@ -17,7 +17,7 @@
     "ios": {
       "supportsTablet": true,
       "config": {
-          "googleMapsApiKey": "AIzaSyBI3ix8QbZ13nm4uQBd0CE3v70bvPZ3oc4"
+          "googleMapsApiKey": "API_Key"
       }
     },
     "android": {
@@ -26,7 +26,7 @@
         "backgroundColor": "#ffffff"
       },
       "googleMaps": {
-        "apiKey": "AIzaSyBI3ix8QbZ13nm4uQBd0CE3v70bvPZ3oc4"
+        "apiKey": "API_Key"
       }
     },
     "web": {
