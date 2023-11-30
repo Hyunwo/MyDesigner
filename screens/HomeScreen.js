@@ -1,7 +1,34 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import * as Location from 'expo-location';
+import { GOOGLE_PLACES_API_KEY } from '@env';
 
 const HomeScreen = ({ navigation }) => {
+  const [salons, setSalons] = useState([]); // 매장 리스트 상태
+
+  useEffect(() => {
+    (async () => {
+      // 위치 권한 요청
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission to access location was denied');
+        return;
+      }
+      // 현재 위치 얻기
+      let location = await Location.getCurrentPositionAsync({});
+      fetchNearbySalons(location.coords.latitude, location.coords.longitude);
+    })();
+  }, []);
+
+  const fetchNearbySalons = async (latitude, longitude) => {
+    // Google Places API를 사용하여 주변 매장 정보 검색
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1500&type=beauty_salon&key=${GOOGLE_PLACES_API_KEY}`
+    );
+    const json = await response.json();
+    setSalons(json.results); // 검색 결과를 상태에 저장
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MyDesigner</Text>
@@ -19,11 +46,23 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.text}>이벤트</Text>
         </TouchableOpacity>
       </View>
+      
+     {/* 매장 리스트를 보여주는 부분, 예시로 Details 페이지를 넣어놨을 뿐 내용은 없음*/}
+     <FlatList
+        data={salons}
+        keyExtractor={(item) => item.place_id}
+        renderItem={({ item }) => (
+          <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('Details', { salon: item })}>
+            <Text style={styles.listItemText}>{item.name}</Text>
+            <Text>{item.vicinity}</Text>
+          </TouchableOpacity>
+        )}
+      />
+
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyInfo')}>
         <Text style={styles.buttonText}>내정보</Text>
       </TouchableOpacity>
     </View>
-    // 추가적으로 하단 탭 바 네비게이션을 표시하는 컴포넌트가 필요할 것입니다.
   );
 };
 
@@ -57,7 +96,6 @@ const styles = StyleSheet.create({
   imagebutton: {
     width: 60,
     height: 60,
-    // 이미지의 스타일링은 필요에 맞게 조정
   },
   text: {
     marginTop: 5,
@@ -72,6 +110,14 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
+    fontSize: 18,
+  },
+  listItem: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#cccccc',
+  },
+  listItemText: {
     fontSize: 18,
   },
 });
