@@ -10,7 +10,7 @@ const HomeScreen = ({ navigation }) => {
           <Image source={require("../assets/hairstyle.png")} style={styles.imagebutton} />
           <Text style={styles.text}>디자이너 및 검색</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem}  onPress={() => navigation.navigate('Map')}>
           <Image source={require("../assets/location.png")} style={styles.imagebutton} />
           <Text style={styles.text}>내 근처 디자이너 찾기</Text>
         </TouchableOpacity>

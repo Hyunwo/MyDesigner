@@ -9,6 +9,7 @@ import SearchScreen from './screens/SearchScreen';
 import MyInfoScreen from './screens/MyInfoScreen';
 import DSignupScreen from './screens/DSignupScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import MapScreen from './screens/MapScreen';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,7 @@ const App = () => {
         <Stack.Screen name="MyInfo" component={MyInfoScreen} />
         <Stack.Screen name="DSignup" component={DSignupScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="Map" component={MapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
