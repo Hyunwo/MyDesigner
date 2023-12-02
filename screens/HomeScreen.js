@@ -59,7 +59,7 @@ const HomeScreen = ({ navigation }) => {
         )}
       />
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyInfo')}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('내정보')}>
         <Text style={styles.buttonText}>내정보</Text>
       </TouchableOpacity>
     </View>

@@ -1,3 +1,4 @@
+// 디자이너 프로필
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
@@ -73,8 +74,7 @@ const MyProfileScreen = ({ navigation }) => {
    };
 
   const openSettings = () => {
-    //navigation.navigate('Settings');
-    navigation.navigate('DHome');
+    navigation.navigate('설정');
   };
 
   return (
@@ -93,7 +93,7 @@ const MyProfileScreen = ({ navigation }) => {
       </View>
       <TouchableOpacity
         style={styles.settingsButton}
-        onPress={() => navigation.navigate('Settings')}
+        onPress={() => navigation.navigate('설정')}
       >
         <Image
           source={require('../assets/settings.png')}

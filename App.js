@@ -18,13 +18,13 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
         <Stack.Screen name="MyDesisgner" component={MainScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="SignUp" component={SignupScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Search" component={SearchScreen} />
-        <Stack.Screen name="MyInfo" component={MyInfoScreen} />
-        <Stack.Screen name="DSignup" component={DSignupScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="로그인" component={LoginScreen} />
+        <Stack.Screen name="회원가입" component={SignupScreen} />
+        <Stack.Screen name="홈" component={HomeScreen} />
+        <Stack.Screen name="검색" component={SearchScreen} />
+        <Stack.Screen name="내정보" component={MyInfoScreen} />
+        <Stack.Screen name="디자이너 회원가입" component={DSignupScreen} />
+        <Stack.Screen name="설정" component={SettingsScreen} />
         <Stack.Screen name="Map" component={MapScreen} />
       </Stack.Navigator>
     </NavigationContainer>

@@ -8,14 +8,14 @@ function MainScreen({ navigation }) {
 
       <TouchableOpacity
         style={[styles.button, styles.firstButton]}
-        onPress={() => navigation.navigate('DSignup')}
+        onPress={() => navigation.navigate('디자이너 회원가입')}
       >
         <Text style={styles.buttonText}>디자이너</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('Login')}
+        onPress={() => navigation.navigate('로그인')}
       >
         <Text style={styles.buttonText}>고객</Text>
       </TouchableOpacity>

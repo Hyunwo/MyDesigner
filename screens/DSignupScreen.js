@@ -1,91 +1,176 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Alert } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
+import { auth, firestore } from '../config/firebaseConfig'
 
-import { auth } from '../config/firebaseConfig';
-import { signInWithPhoneNumber } from 'firebase/auth';
+const SignupScreen = ({ navigation }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [gender, setGender] = useState('');
+  const [phone, setPhone] = useState('');
+  const [shopName, setShopName] = useState('');
+  const [region, setRegion] = useState('');
 
-const DSignupScreen = () => {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [code, setCode] = useState('');
-  const [confirmationResult, setConfirmationResult] = useState(null);
-
-  const handleSendCode = async () => {
-    try {
-      const result = await signInWithPhoneNumber(auth, phoneNumber);
-      setConfirmationResult(result);
-    } catch (error) {
-      Alert.alert("Error", "Failed to send verification code: " + error.message);
-    }
-  };
-
-  const handleVerifyCode = async () => {
-    if (!confirmationResult) {
-      Alert.alert("Error", "Please request code first.");
+  const handleSignup = () => {
+    // 입력 유효성 검사
+    if (!name) {
+      Alert.alert("Error", "이름을 입력해 주세요.");
       return;
     }
-  
-    try {
-      const credential = await confirmationResult.confirm(code);
-      // 인증 성공, Firestore에 사용자 정보 저장
-      // 예: const firestoreRef = doc(firestore, 'designers', credential.user.uid);
-      //     await setDoc(firestoreRef, { /* 사용자 정보 */ });
-      Alert.alert("Success", "Phone number verified!");
-    } catch (error) {
-      Alert.alert("Error", "Failed to verify code: " + error.message);
+    if (!email) {
+      Alert.alert("Error", "이메일을 입력해주세요.");
+      return;
     }
-  };
-  
-  // 렌더링 코드
-  return (
-    <View>
-      {/* 전화번호 입력 필드, 'Send Code' 버튼 */}
-      <TextInput value={phoneNumber} onChangeText={setPhoneNumber} placeholder="Phone Number" />
-      <Button title="Send Code" onPress={handleSendCode} />
-  
-      {/* 인증 코드 입력 필드, 'Verify Code' 버튼 */}
-      <TextInput value={code} onChangeText={setCode} placeholder="Verification Code" />
-      <Button title="Verify Code" onPress={handleVerifyCode} />
-    </View>
-  );
+    if (!password) {
+      Alert.alert("Error", "비밃번호를 입력해주세요.");
+      return;
+    }
+    if (!gender) {
+      Alert.alert("Error", "성별을 입력해주세요.");
+      return;
+    }
+    if (!phone) {
+      Alert.alert("Error", "휴대폰번호를 입력해주세요.");
+      return;
+    }
+    if (!region) {
+      Alert.alert("Error", "근무지역을 입력해주세요.");
+      return;
+    }
+    if (!shopName) {
+      Alert.alert("Error", "샵이름을 입력해주세요.");
+      return;
+    }
 
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredentials) => {
+        if (userCredentials && userCredentials.user) {
+          const user = userCredentials.user;
+          return setDoc(doc(firestore, 'designers', user.uid), {
+            name,
+            email,
+            gender,
+            phone,
+            region,
+            shopName,
+          });
+        } else {
+          throw new Error('User credentials are not available');
+        }
+      })
+    .then(() => {
+      Alert.alert('회원가입이 완료되었습니다!');
+      navigation.navigate('로그인')
+    })
+    .catch(error => {
+      let errorMessage;
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            errorMessage = "이미 사용 중인 이메일입니다.";
+            break;
+          case 'auth/invalid-email':
+            errorMessage = "올바르지 않은 이메일 형식입니다.";
+            break;
+          case 'auth/operation-not-allowed':
+            errorMessage = "이메일 및 비밀번호로 로그인이 비활성화되어 있습니다.";
+            break;
+          case 'auth/weak-password':
+            errorMessage = "비밀번호는 6자리 이상으로 입력해 주세요.";
+            break;
+          default:
+            errorMessage = "회원가입 중 오류가 발생했습니다. 다시 시도해주세요";
+      }
+      Alert.alert('Error', errorMessage)
+    })
+  }
+
+  // UI 렌더링 부분
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <ScrollView>
+        <View style={styles.innerContainer}>
+          <View style={styles.container}>
+            <TextInput
+              style={styles.input}
+              placeholder="이름"
+              value={name}
+              onChangeText={setName}
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="이메일"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="비밀번호"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="성별"
+              value={gender}
+              onChangeText={setGender}
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="연락처('-'없이 입력해주세요.)"
+              value={phone}
+              onChangeText={setPhone}
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="근무지역"
+              value={region}
+              onChangeText={setRegion}
+              autoCapitalize="none"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="샵이름"
+              value={shopName}
+              onChangeText={setShopName}
+              autoCapitalize="none"
+            />
+            <Button title="회원가입" onPress={handleSignup} />
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
 };
-  
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
-    backgroundColor: '#fff',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+  innerContainer: {
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    paddingTop: 20,
   },
   input: {
-    width: '100%',
-    height: 50,
-    borderBottomWidth: 1,
-    borderBottomColor: '#cccccc',
-    marginTop: 10,
-    padding: 10,
-    fontSize: 16,
-  },
-  button: {
-    width: '80%',
-    height: 50,
-    backgroundColor: '#007AFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingHorizontal: 10,
   },
 });
 
-export default DSignupScreen;
+export default SignupScreen;

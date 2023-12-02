@@ -76,7 +76,7 @@ const MyInfoScreen = ({ navigation }) => {
    };
 
   const openSettings = () => {
-    navigation.navigate('Settings');
+    navigation.navigate('설정');
   };
 
   return (

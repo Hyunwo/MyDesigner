@@ -22,7 +22,7 @@ const LoginScreen = ({navigation}) => {
     // Firebase Authentication으로 로그인
     signInWithEmailAndPassword(auth, email, password)
     .then(() => {
-      navigation.navigate('Home')
+      navigation.navigate('홈')
     })
     .catch((error) => {
       if (error.code === 'auth/invalid-login-credentials' || error.code ==='auth/user-not-found') {
@@ -54,8 +54,11 @@ const LoginScreen = ({navigation}) => {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>로그인</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('SignUp')}>
+      <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('회원가입')}>
         <Text>MyDesigner가 처음이시라면, 회원가입이 필요해요.</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('디자이너 회원가입')}>
+        <Text>MyDesigner가 처음이시라면, 회원가입이 필요해요.(Designer)</Text>
       </TouchableOpacity>
     </View>
   );
