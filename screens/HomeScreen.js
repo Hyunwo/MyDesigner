@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
 import * as Location from 'expo-location';
 import { GOOGLE_PLACES_API_KEY } from '@env';
 
@@ -21,13 +21,34 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   const fetchNearbySalons = async (latitude, longitude) => {
-    // Google Places API를 사용하여 주변 매장 정보 검색
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1500&type=beauty_salon&key=${GOOGLE_PLACES_API_KEY}`
-    );
-    const json = await response.json();
-    setSalons(json.results); // 검색 결과를 상태에 저장
+    try{
+      // Google Places API를 사용하여 주변 매장 정보 검색
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1500&type=beauty_salon&key=${GOOGLE_PLACES_API_KEY}`
+      );
+      const json = await response.json();
+
+      const salonsWithPhotos = json.results.map(salon => {
+        const photoReference = salon.photos && salon.photos.length > 0 ? salon.photos[0].photo_reference : null;
+        const photoUrl = photoReference 
+          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${GOOGLE_PLACES_API_KEY}`
+          : null;
+
+        return { ...salon, photoReference, photoUrl };
+      });
+      setSalons(salonsWithPhotos);
+    } catch (error) {
+      console.error("Error fetching nearby salons:", error);
+    }
   };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('Details', { salon: item })}>
+      {item.photoUrl && <Image source={{ uri: item.photoUrl }} style={styles.salonImage} />}
+      <Text style={styles.listItemText}>{item.name}</Text>
+      <Text>{item.vicinity}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -45,20 +66,18 @@ const HomeScreen = ({ navigation }) => {
           <Image source={require("../assets/event.png")} style={styles.imagebutton} />
           <Text style={styles.text}>이벤트</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('DesignerList')}>
+          <Image source={require("../assets/event.png")} style={styles.imagebutton} />
+          <Text style={styles.text}>디자이너</Text>
+        </TouchableOpacity>
       </View>
       
-     {/* 매장 리스트를 보여주는 부분, 예시로 Details 페이지를 넣어놨을 뿐 내용은 없음*/}
+     {/* 매장 리스트를 보여주는 부분 */}
      <FlatList
         data={salons}
         keyExtractor={(item) => item.place_id}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('Details', { salon: item })}>
-            <Text style={styles.listItemText}>{item.name}</Text>
-            <Text>{item.vicinity}</Text>
-          </TouchableOpacity>
-        )}
+        renderItem={renderItem}
       />
-
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('내정보')}>
         <Text style={styles.buttonText}>내정보</Text>
       </TouchableOpacity>
@@ -73,18 +92,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   title: {
-    fontSize: 20,
+    fontSize: 27,
     fontWeight: 'bold',
     marginVertical: 10,
   },
-  searchInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 10,
-  },
+  // searchInput: {
+  //   height: 40,
+  //   borderColor: 'gray',
+  //   borderWidth: 1,
+  //   borderRadius: 10,
+  //   padding: 10,
+  //   marginVertical: 10,
+  // },
   menuContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -119,6 +138,10 @@ const styles = StyleSheet.create({
   },
   listItemText: {
     fontSize: 18,
+  },
+  salonImage: {
+    width: '100%',
+    height: 200,
   },
 });
 

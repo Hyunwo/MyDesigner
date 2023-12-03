@@ -39,7 +39,7 @@ const SignupScreen = ({ navigation }) => {
     })
     .then(() => {
       Alert.alert('회원가입이 완료되었습니다!');
-      navigation.navigate('Login')
+      navigation.navigate('로그인')
     })
     .catch(error => {
       let errorMessage;
