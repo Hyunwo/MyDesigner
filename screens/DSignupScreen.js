@@ -1,8 +1,28 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert, Text, Picker, TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert, Picker } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
 import { auth, firestore } from '../config/firebaseConfig'
+
+const regions = [
+  "서울",
+  "경기",
+  "인천",
+  "부산",
+  "대구",
+  "광주",
+  "대전",
+  "울산",
+  "세종",
+  "강원",
+  "충북",
+  "충남",
+  "전북",
+  "전남",
+  "경북",
+  "경남",
+  "제주",
+];
 
 const DSignupScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -28,7 +48,7 @@ const DSignupScreen = ({ navigation }) => {
     })
     .then(() => {
       Alert.alert('회원가입이 완료되었습니다!');
-      navigation.navigate('Login')
+      navigation.navigate('DLogin')
     })
     .catch(error => Alert.alert('Error', error.message))
   }
@@ -73,21 +93,22 @@ const DSignupScreen = ({ navigation }) => {
         onChangeText={setPhone}
         keyboardType="phone-pad"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="지역 선택"
-        value={region}
-        onChangeText={setRegion}
-      />
+      <Picker
+        selectedValue={region}
+        style={styles.picker}
+        onValueChange={(itemValue, itemIndex) => setRegion(itemValue)}
+      >
+        {regions.map((regionItem, index) => (
+          <Picker.Item key={index} label={regionItem} value={regionItem} />
+        ))}
+      </Picker>
       <TextInput
         style={styles.input}
         placeholder="샵 이름"
         value={shopName}
         onChangeText={setShopName}
       />
-      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>회원가입</Text>
-      </TouchableOpacity>
+      <Button title="회원가입" onPress={handleSignup} />
     </View>
   );
 };
@@ -108,17 +129,6 @@ const styles = StyleSheet.create({
     height: 50,
     width: '100%',
     marginBottom: 10,
-  },
-  button: {
-    backgroundColor: '#007bff',
-    padding: 10,
-    alignItems: 'center',
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 18,
   },
 });
 
