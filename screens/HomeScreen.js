@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MyDesigner</Text>
@@ -21,8 +21,8 @@ const HomeScreen = () => {
           <Text style={styles.text}>내 근처 디자이너 찾기</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
-          <Image source={require("../assets/event.png")} style={styles.imagebutton} />
-          <Text style={styles.text}>이벤트</Text>
+          <Image source={require("../assets/info.png")} style={styles.imagebutton} />
+          <Text style={styles.text}>찜</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyInfo')}>
