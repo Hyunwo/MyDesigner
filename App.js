@@ -63,16 +63,16 @@ const App = () => {
         <Stack.Screen name="SignUp" component={SignupScreen} options={{ title: '회원가입' }} />
         <Stack.Screen name="DSignUp" component={DSignupScreen} options={{ title: '회원가입' }} />
         {/* <Stack.Screen name="MainTab" component={MainTabScreen} options={{ headerShown: false }} /> */}
-        <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="Search" component={SearchScreen} options={{ title: '디자이너 및 샵 검색' }} />
         <Stack.Screen name="Reserve" component={ReserveScreen} />
         <Stack.Screen name="Map" component={MapScreen} />
         <Stack.Screen name="MyInfo" component={MyInfoScreen} options={{ title: '내정보' }} />
         <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{ title: '내정보' }} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-        <Stack.Screen name="ReservationList" component={ReservationListScreen} />
-        <Stack.Screen name="DReservationList" component={DReservationListScreen} />
-        <Stack.Screen name="MainTab" component={TabNavigator} options={{ headerShown: false }} />
-        <Stack.Screen name="MyInfoTab" component={TabNavigator} options={{ headerShown: true }} />
+        <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: '설정' }} />
+        <Stack.Screen name="ReservationList" component={ReservationListScreen} options={{ title: '예약 내역' }} />
+        <Stack.Screen name="DReservationList" component={DReservationListScreen} options={{ title: '예약 내역' }} />
+        {/* <Stack.Screen name="MainTab" component={TabNavigator} options={{ headerShown: false }} />
+        <Stack.Screen name="MyInfoTab" component={TabNavigator} options={{ headerShown: true }} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
