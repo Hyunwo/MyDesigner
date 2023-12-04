@@ -37,6 +37,7 @@ const SignupScreen = ({ navigation }) => {
         placeholder="이름"
         value={name}
         onChangeText={setName}
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
