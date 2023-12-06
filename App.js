@@ -11,6 +11,9 @@ import DSignupScreen from './screens/DSignupScreen';
 import HomeScreen from './screens/HomeScreen'; // HomeScreen 컴포넌트를 별도의 파일로 분리해야 함
 import SearchScreen from './screens/SearchScreen';
 import ReserveScreen from './screens/ReserveScreen';
+import ReservationMenuScreen from './screens/ReservationMenuScreen';
+import StudentcutScreen from './screens/StudentcutScreen';
+import StudentcutReservationScreen from './screens/StudentcutReservationScreen';
 import MapScreen from './screens/MapScreen';
 import MyInfoScreen from './screens/MyInfoScreen';
 import MyProfileScreen from './screens/MyProfileScreen';
@@ -19,37 +22,6 @@ import ReservationListScreen from './screens/ReservationListScreen';
 import DReservationListScreen from './screens/DReservationListScreen';
 
 const Stack = createStackNavigator();
-//const Tab = createBottomTabNavigator();
-
-// function MainTabScreen() {
-//   return (
-//     <Tab.Navigator
-//       screenOptions={({ route }) => ({
-//         tabBarIcon: ({ focused, color, size }) => {
-//           let iconName;
-
-//           if (route.name === 'Home') {
-//             iconName = focused ? 'ios-home' : 'ios-home-outline';
-//           } else if (route.name === 'Main') {
-//             iconName = focused ? 'ios-list-box' : 'ios-list';
-//           }
-//           // 다른 탭에 대한 아이콘을 추가할 수 있습니다.
-
-//           // 아이콘 리턴
-//           return <Ionicons name={iconName} size={size} color={color} />;
-//         },
-//       })}
-//       tabBarOptions={{
-//         activeTintColor: 'tomato',
-//         inactiveTintColor: 'gray',
-//       }}
-//     >
-//       <Tab.Screen name="Main" component={MainScreen} />
-//       <Tab.Screen name="Home" component={HomeScreen} />
-//       {/* 추가하고 싶은 다른 탭을 여기에 넣을 수 있습니다. */}
-//     </Tab.Navigator>
-//   );
-// }
 
 const App = () => {
   return (
@@ -65,9 +37,12 @@ const App = () => {
         {/* <Stack.Screen name="MainTab" component={MainTabScreen} options={{ headerShown: false }} /> */}
         <Stack.Screen name="Search" component={SearchScreen} options={{ title: '디자이너 및 샵 검색' }} />
         <Stack.Screen name="Reserve" component={ReserveScreen} />
+        <Stack.Screen name="ReservationMenu" component={ReservationMenuScreen} />
+        <Stack.Screen name="Studentcut" component={StudentcutScreen} />
+        <Stack.Screen name="StudentcutReservation" component={StudentcutReservationScreen} />
         <Stack.Screen name="Map" component={MapScreen} />
-        <Stack.Screen name="MyInfo" component={MyInfoScreen} options={{ title: '내정보' }} />
-        <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{ title: '내정보' }} />
+        <Stack.Screen name="MyInfo" component={MyInfoScreen} options={{ title: '내 프로필' }} />
+        <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{ title: '내 프로필' }} />
         <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: '설정' }} />
         <Stack.Screen name="ReservationList" component={ReservationListScreen} options={{ title: '예약 내역' }} />
         <Stack.Screen name="DReservationList" component={DReservationListScreen} options={{ title: '예약 내역' }} />
