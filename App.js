@@ -32,8 +32,8 @@ const App = () => {
         <Stack.Screen name="Who" component={WhoScreen} options={{ title: 'Designer or Customer' }} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="DLogin" component={DLoginScreen} />
-        <Stack.Screen name="SignUp" component={SignupScreen} options={{ title: '회원가입' }} />
-        <Stack.Screen name="DSignUp" component={DSignupScreen} options={{ title: '회원가입' }} />
+        <Stack.Screen name="Signup" component={SignupScreen} options={{ title: '회원가입' }} />
+        <Stack.Screen name="DSignup" component={DSignupScreen} options={{ title: '회원가입' }} />
         {/* <Stack.Screen name="MainTab" component={MainTabScreen} options={{ headerShown: false }} /> */}
         <Stack.Screen name="Search" component={SearchScreen} options={{ title: '디자이너 및 샵 검색' }} />
         <Stack.Screen name="Reserve" component={ReserveScreen} />
