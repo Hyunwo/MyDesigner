@@ -19,11 +19,8 @@ const ReservationMenuScreen = ({ route, navigation }) => {
     // 추가 서비스 아이템들...
   ];
 
-  const handleServicePress = (service) => {
+  const handleServicePress = () => {
     navigation.navigate('Studentcut');
-    // 예약 화면으로 네비게이션하거나 서비스 관련 액션을 실행합니다.
-    // navigation.navigate('ReservationScreen', { serviceId: service.id });
-    Alert.alert('Service Selected', `You selected ${service.title}`);
   };
 
   return (
