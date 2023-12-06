@@ -5,6 +5,10 @@ import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '../config/firebaseConfig';
 
 const ReservationMenuScreen = ({ route, navigation }) => {
+    const [selectedCategory, setSelectedCategory] = useState('커트');
+
+    // 서비스 카테고리
+  const categories = ['커트', '펌', '염색', '클리닉'];
     const { designerId } = route.params; // designerId를 route.params에서 추출
   // 예시를 위해 정적으로 서비스 목록을 정의합니다.
   // 실제 앱에서는 서버에서 데이터를 가져오거나 상태 관리를 통해 동적으로 목록을 구성해야 합니다.
@@ -24,9 +28,24 @@ const ReservationMenuScreen = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
+        {/* 서비스 카테고리 */}
+      <View style={styles.categoriesRow}>
+        {categories.map((category) => (
+          <TouchableOpacity
+            key={category}
+            style={[
+              styles.categoryButton,
+              selectedCategory === category && styles.selectedCategory,
+            ]}
+            onPress={() => setSelectedCategory(category)}
+          >
+            <Text style={styles.categoryText}>{category}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
       {/* ... 프로필 이미지, 이름, 타이틀, 설명 ... */}
       <View style={styles.menuSection}>
-        <Text style={styles.menuTitle}>커트</Text>
+        <Text style={styles.menuTitle}>{selectedCategory}</Text>
         {services.map((service) => (
           <TouchableOpacity key={service.id} style={styles.menuItem} onPress={() => handleServicePress(service)}>
             <Text style={styles.menuItemText}>{service.title}</Text>
@@ -84,6 +103,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
       },
       interactionText: {
+        fontSize: 16,
+      },
+      categoriesRow: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingVertical: 16,
+      },
+      categoryButton: {
+        padding: 8,
+        marginHorizontal: 4,
+        backgroundColor: '#e1e1e1',
+        borderRadius: 20,
+      },
+      selectedCategory: {
+        backgroundColor: '#007bff',
+      },
+      categoryText: {
+        color: 'black',
         fontSize: 16,
       },
       menuSection: {
