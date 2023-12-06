@@ -22,7 +22,7 @@ const DHomeScreen = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => navigation.navigate('내정보')}
+            onPress={() => navigation.navigate('MyProfile')}
         >
           <Image source={require("../assets/info.png")} style={styles.imagebutton} />
           <Text style={styles.text}>내 프로필</Text>

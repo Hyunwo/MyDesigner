@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { auth } from '../config/firebaseConfig'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
-const LoginScreen = ({navigation}) => {
+const DLoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(""); // 로그인 이메일과 비밀번호를 위한 상태 변수 선언
   const [password, setPassword] = useState("");
 
@@ -22,7 +22,7 @@ const LoginScreen = ({navigation}) => {
     // Firebase Authentication으로 로그인
     signInWithEmailAndPassword(auth, email, password)
     .then(() => {
-      navigation.navigate('Home')
+      navigation.navigate('DHome')
     })
     .catch((error) => {
       if (error.code === 'auth/invalid-login-credentials' || error.code ==='auth/user-not-found') {
@@ -54,7 +54,7 @@ const LoginScreen = ({navigation}) => {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>로그인</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('SignUp')}>
+      <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('DSignUp')}>
         <Text>MyDesigner가 처음이시라면, 회원가입이 필요해요.</Text>
       </TouchableOpacity>
     </View>
@@ -97,4 +97,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default DLoginScreen;

@@ -36,26 +36,26 @@ const DesignerDetailsScreen = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Image source={{ uri: designer.profilePicture }} style={styles.profileImage} />
+      <Image source={{ uri: designer.profileImageUrl }} style={styles.profileImage} />
       <Text style={styles.name}>{designer.name}</Text>
       <Text style={styles.salonName}>{designer.salonName}</Text>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.detailsTitle}>상세 정보</Text>
-        <Text>{designer.details}</Text>
-      </View>
       <View style={styles.servicesContainer}>
         <Text style={styles.servicesTitle}>서비스</Text>
-      {/* 디자이너가 제공하는 서비스 목록 확인 */}
-      {designer.services && Array.isArray(designer.services) ? (
-        designer.services.map((service, index) => (
-          <Text key={index} style={styles.serviceItem}>
-            {service.type}: {service.price}원
-          </Text>
-        ))
-      ) : (
-        <Text>서비스 정보가 없습니다.</Text>
-      )}
-    </View>
+        {designer.services ? (
+          Object.entries(designer.services).map(([category, services]) => (
+            <View key={category}>
+              <Text style={styles.categoryTitle}>{category}</Text>
+              {services.map((service, index) => (
+                <Text key={index} style={styles.serviceItem}>
+                  {service.name}: {service.price}원
+                </Text>
+              ))}
+            </View>
+          ))
+        ) : (
+          <Text>서비스 정보가 없습니다.</Text>
+        )}
+      </View>
     </ScrollView>
   );
 };

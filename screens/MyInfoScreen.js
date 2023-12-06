@@ -19,9 +19,7 @@ const MyInfoScreen = ({ navigation }) => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
           alert('이미지를 업로드하려면 사진첩 권한이 필요합니다.');
-          //return false
         }
-        //return true
       }
     })();
   }, []);
@@ -51,7 +49,7 @@ const MyInfoScreen = ({ navigation }) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
       quality: 1,
     });
 

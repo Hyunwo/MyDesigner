@@ -8,17 +8,17 @@ function MainScreen({ navigation }) {
 
       <TouchableOpacity
         style={[styles.button, styles.firstButton]}
-        onPress={() => navigation.navigate('디자이너 회원가입')}
+        onPress={() => navigation.navigate('Who')}
       >
-        <Text style={styles.buttonText}>디자이너</Text>
+        <Text style={styles.buttonText}>WhoScreen</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('로그인')}
+        onPress={() => navigation.navigate('Login')}
       >
         <Text style={styles.buttonText}>고객</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }

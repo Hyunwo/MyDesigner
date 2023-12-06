@@ -29,7 +29,7 @@ const MapSelectorScreen = ({ route, navigation }) => {
   // 위치 확정 및 저장 처리 함수
   const confirmLocation = () => {
     if (selectedLocation) {
-      navigation.navigate('디자이너 회원가입', { selectedLocation });
+      navigation.navigate('DSignUp', { selectedLocation });
     } else {
       Alert.alert('위치 선택', '헤어샵의 위치를 선택해주세요.');    // 위치 선택 알림
     }

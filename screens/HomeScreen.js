@@ -62,7 +62,7 @@ const HomeScreen = ({ navigation }) => {
           <Image source={require("../assets/location.png")} style={styles.imagebutton} />
           <Text style={styles.text}>내 근처 디자이너 찾기</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('ReservationMenu')}>
           <Image source={require("../assets/event.png")} style={styles.imagebutton} />
           <Text style={styles.text}>이벤트</Text>
         </TouchableOpacity>
@@ -78,7 +78,7 @@ const HomeScreen = ({ navigation }) => {
         keyExtractor={(item) => item.place_id}
         renderItem={renderItem}
       />
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('내정보')}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyInfo')}>
         <Text style={styles.buttonText}>내정보</Text>
       </TouchableOpacity>
     </View>
