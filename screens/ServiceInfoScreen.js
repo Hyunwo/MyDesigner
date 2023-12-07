@@ -78,7 +78,7 @@ const ServiceInfoScreen = ({ route, navigation }) => {
       </View>
 
       {/* 예약 버튼 */}
-      <TouchableOpacity style={styles.bookingButton} onPress={() => navigation.navigate('DateReservation')}>
+      <TouchableOpacity style={styles.bookingButton} onPress={() => navigation.navigate('DateReservtion')}>
         <Text style={styles.bookingButtonText}>예약하기</Text>
       </TouchableOpacity>
     </ScrollView>

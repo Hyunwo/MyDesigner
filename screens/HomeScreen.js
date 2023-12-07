@@ -81,9 +81,9 @@ const HomeScreen = ({ navigation }) => {
           <Image source={require("../assets/location.png")} style={styles.imagebutton} />
           <Text style={styles.text}>내 근처 디자이너 찾기</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('MyProfile')}>
-          <Image source={require("../assets/event.png")} style={styles.imagebutton} />
-          <Text style={styles.text}>test</Text>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('MyInfo')}>
+          <Image source={require("../assets/my_info.png")} style={styles.imagebutton} />
+          <Text style={styles.text}>내정보</Text>
         </TouchableOpacity>
       </View>
       
@@ -93,9 +93,6 @@ const HomeScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyInfo')}>
-        <Text style={styles.buttonText}>내정보</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -126,37 +123,25 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 5,
   },
-  button: {
-    height: 50,
-    backgroundColor: 'skyblue',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-  },
   listItem: {
     flexDirection: 'row',
-    justifyContent: 'space-between', // 내용을 양 끝으로 분배합니다.
+    justifyContent: 'space-between',
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#cccccc',
-    alignItems: 'center', // 항목들을 세로 중앙에 배치합니다.
+    alignItems: 'center',
   },
   listItemText: {
     fontSize: 18,
   }, 
   textContainer: {
-    flex: 1, // 이름과 헤어샵 이름을 위한 공간을 최대로 활용합니다.
+    flex: 1,
     justifyContent: 'center',
   },
   profileImage: {
-    width: 50, // 이미지 크기를 원하는 대로 조정합니다.
-    height: 50, // 이미지 크기를 원하는 대로 조정합니다.
-    borderRadius: 25, // 원형 이미지로 만들기 위해 반지름을 설정합니다.
+    width: 50,
+    height: 50,
+    borderRadius: 25,
   },
 });
 

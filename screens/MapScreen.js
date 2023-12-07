@@ -2,13 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, Alert, TouchableOpacity, Text, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { GOOGLE_PLACES_API_KEY } from '@env';
+import { firestore } from '../config/firebaseConfig';
+import { collection, getDocs } from 'firebase/firestore';
 
-const MapScreen = () => {
-  const [initialRegion, setInitialRegion] = useState(null); // 초기 위치 상태
-  const [region, setRegion] = useState(null); // 지도의 현재 지역 상태
-  const [salons, setSalons] = useState([]); // 미용실 목록 상태
-  const mapRef = useRef(null); // 지도의 ref를 생성
+const MapScreen = ({navigation}) => {
+  const [initialRegion, setInitialRegion] = useState(null);
+  const [selectedDesigner, setSelectedDesigner] = useState(null);
+  const [region, setRegion] = useState(null);
+  const [designers, setDesigners] = useState([]);
+  const mapRef = useRef(null);
+
 
   // 위치 권한을 요청하고 현재 위치를 가져옵니다.
   useEffect(() => {
@@ -20,44 +23,70 @@ const MapScreen = () => {
       }
   
       let location = await Location.getCurrentPositionAsync({});
-      const newRegion = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: 0.027,
-        longitudeDelta: 0.027,
-      };
-      setInitialRegion(newRegion); // 초기 위치를 설정
-      setRegion(newRegion); // 지도의 현재 지역 상태를 설정
-
-      // 초기 위치를 기반으로 미용실을 검색
-      fetchSalons(newRegion.latitude, newRegion.longitude);
+      setInitialRegionAndRegion(location.coords);
+      fetchDesigners();
     })();
   }, []);
 
-  const fetchSalons = async (latitude, longitude) => {
+  const setInitialRegionAndRegion = (coords) => {
+    const newRegion = {
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+      latitudeDelta: 0.027,
+      longitudeDelta: 0.027,
+    };
+    setInitialRegion(newRegion);
+    setRegion(newRegion);
+  };
+  
+
+  const fetchDesigners = async () => {
     try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1500&type=beauty_salon&key=${GOOGLE_PLACES_API_KEY}`
-      );
-      const json = await response.json();
-      setSalons(json.results); // 미용실 데이터를 상태에 저장
+      const querySnapshot = await getDocs(collection(firestore, 'designers'));
+      const fetchedDesigners = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setDesigners(fetchedDesigners); // 디자이너 데이터를 상태에 저장
     } catch (error) {
-      Alert.alert("Error", "Unable to fetch salons: " + error.message);
+      Alert.alert("Error", "Unable to fetch designers: " + error.message);
+    }
+  };
+
+  const onMarkerPress = (designer) => {
+    setSelectedDesigner(designer); // 선택된 디자이너 정보를 상태에 저장
+  };
+
+  const onBookPress = () => {
+    if (selectedDesigner) {
+      navigation.navigate('ReservationMenu', {
+        designerId: selectedDesigner.id, // 디자이너 ID 전달
+      });
     }
   };
 
   const searchInThisArea = () => {
     if (mapRef.current) {
       mapRef.current.getCamera().then(camera => {
+        // 현재 지도의 뷰포트를 사용하여 새로운 지역 설정
         const newRegion = {
           latitude: camera.center.latitude,
           longitude: camera.center.longitude,
-          latitudeDelta: region.latitudeDelta,
-          longitudeDelta: region.longitudeDelta,
+          latitudeDelta: camera.latitudeDelta,
+          longitudeDelta: camera.longitudeDelta,
         };
-        setRegion(newRegion); // 지도의 현재 지역 상태를 업데이트하지만 초기 현위치는 변경하지 않음
-        fetchSalons(newRegion.latitude, newRegion.longitude);
+        setRegion(newRegion); // 지도의 현재 지역 상태를 업데이트
+        fetchDesignersInRegion(newRegion); // 해당 지역 내의 디자이너들을 다시 불러옴
       });
+    }
+  };
+
+  const fetchDesignersInRegion = async (region) => {
+    try {
+      // Firestore에서 디자이너 정보를 불러오는 로직
+      // 필요에 따라 지역 기반으로 디자이너 목록을 필터링하는 로직 추가
+      const querySnapshot = await getDocs(collection(firestore, 'designers'));
+      const fetchedDesigners = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setDesigners(fetchedDesigners);
+    } catch (error) {
+      Alert.alert("Error", "Unable to fetch designers: " + error.message);
     }
   };
 
@@ -80,15 +109,16 @@ const MapScreen = () => {
             title="내 위치"
             pinColor="#0075FF"
           />
-          {/* 주변 미용실의 위치를 표시하는 마커 */}
-          {salons.map((salon, index) => (
+          {/* 디자이너들의 위치를 표시하는 마커 */}
+          {designers.map((designer, index) => (
             <Marker
               key={index}
               coordinate={{
-                latitude: salon.geometry.location.lat,
-                longitude: salon.geometry.location.lng,
+                latitude: designer.location.lat,
+                longitude: designer.location.lng,
               }}
-              title={salon.name}
+              title={`${designer.name} - ${designer.salonName}`}
+              onPress={() => onMarkerPress(designer)}
             />
           ))}
         </MapView>
@@ -105,6 +135,11 @@ const MapScreen = () => {
           <Text>이 지역 재검색</Text>
         </TouchableOpacity>
       </View>
+      {selectedDesigner && (
+        <TouchableOpacity style={styles.bookButton} onPress={onBookPress}>
+          <Text style={styles.bookButtonText}>예약하기</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -148,6 +183,17 @@ const styles = StyleSheet.create({
   myLocationIcon: { // 아이콘 크기 조정
     width: 30,
     height: 30,
+  },
+  bookButton: {
+    position: 'absolute',
+    bottom: '10%',
+    left: '55%', // 버튼 위치 조정
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 20,
+  },
+  bookButtonText: {
+    color: 'white',
   },
 
 });
