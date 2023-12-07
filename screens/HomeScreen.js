@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import { firestore } from '../config/firebaseConfig';
+import { collection, getDocs } from 'firebase/firestore';
 import * as Location from 'expo-location';
-import { GOOGLE_PLACES_API_KEY } from '@env';
 
 const HomeScreen = ({ navigation }) => {
-  const [salons, setSalons] = useState([]); // 매장 리스트 상태
+  const [designers, setDesigners] = useState([]);
+  const [currentLocation, setCurrentLocation] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -16,37 +18,54 @@ const HomeScreen = ({ navigation }) => {
       }
       // 현재 위치 얻기
       let location = await Location.getCurrentPositionAsync({});
-      fetchNearbySalons(location.coords.latitude, location.coords.longitude);
+      setCurrentLocation(location.coords);
+      fetchDesigners(location.coords);
     })();
   }, []);
 
-  const fetchNearbySalons = async (latitude, longitude) => {
-    try{
-      // Google Places API를 사용하여 주변 매장 정보 검색
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=1500&type=beauty_salon&key=${GOOGLE_PLACES_API_KEY}`
-      );
-      const json = await response.json();
+  const fetchDesigners = async (coords) => {
+    // Firestore에서 디자이너 정보 가져오기
+    const querySnapshot = await getDocs(collection(firestore, 'designers'));
+    const fetchedDesigners = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      distance: getDistance(coords, doc.data().location), // 거리 추가
+    }));
 
-      const salonsWithPhotos = json.results.map(salon => {
-        const photoReference = salon.photos && salon.photos.length > 0 ? salon.photos[0].photo_reference : null;
-        const photoUrl = photoReference 
-          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${GOOGLE_PLACES_API_KEY}`
-          : null;
-
-        return { ...salon, photoReference, photoUrl };
-      });
-      setSalons(salonsWithPhotos);
-    } catch (error) {
-      console.error("Error fetching nearby salons:", error);
-    }
+    // 사용자 위치를 기준으로 디자이너 정렬
+    fetchedDesigners.sort((a, b) => a.distance - b.distance);
+    setDesigners(fetchedDesigners);
   };
 
+  // 두 위치 사이의 거리 계산
+  function getDistance(location1, location2) {
+    if (!location1 || !location2) return Infinity;
+    const radlat1 = Math.PI * location1.latitude / 180;
+    const radlat2 = Math.PI * location2.latitude / 180;
+    const theta = location1.longitude - location2.longitude;
+    const radtheta = Math.PI * theta / 180;
+    let dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    if (dist > 1) {
+      dist = 1;
+    }
+    dist = Math.acos(dist);
+    dist = dist * 180 / Math.PI;
+    dist = dist * 60 * 1.1515;
+    return dist * 1.609344; // 킬로미터 단위
+  }
+
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('Details', { salon: item })}>
-      {item.photoUrl && <Image source={{ uri: item.photoUrl }} style={styles.salonImage} />}
-      <Text style={styles.listItemText}>{item.name}</Text>
-      <Text>{item.vicinity}</Text>
+    <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ReservationMenu', { designerId: item.id })}>
+      <View style={styles.textContainer}>
+        <Text style={styles.listItemText}>{item.name}</Text>
+        <Text style={styles.salonName}>{item.salonName}</Text>
+      </View>
+      {item.profileImageUrl && (
+        <Image
+          source={{ uri: item.profileImageUrl }}
+          style={styles.profileImage}
+        />
+      )}
     </TouchableOpacity>
   );
 
@@ -62,20 +81,16 @@ const HomeScreen = ({ navigation }) => {
           <Image source={require("../assets/location.png")} style={styles.imagebutton} />
           <Text style={styles.text}>내 근처 디자이너 찾기</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('ReservationMenu')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('MyProfile')}>
           <Image source={require("../assets/event.png")} style={styles.imagebutton} />
-          <Text style={styles.text}>이벤트</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('DesignerList')}>
-          <Image source={require("../assets/event.png")} style={styles.imagebutton} />
-          <Text style={styles.text}>디자이너</Text>
+          <Text style={styles.text}>test</Text>
         </TouchableOpacity>
       </View>
       
-     {/* 매장 리스트를 보여주는 부분 */}
+     {/* 디자이너 리스트를 보여주는 부분 */}
      <FlatList
-        data={salons}
-        keyExtractor={(item) => item.place_id}
+        data={designers}
+        keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('MyInfo')}>
@@ -96,14 +111,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 10,
   },
-  // searchInput: {
-  //   height: 40,
-  //   borderColor: 'gray',
-  //   borderWidth: 1,
-  //   borderRadius: 10,
-  //   padding: 10,
-  //   marginVertical: 10,
-  // },
   menuContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -132,16 +139,24 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   listItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // 내용을 양 끝으로 분배합니다.
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#cccccc',
+    alignItems: 'center', // 항목들을 세로 중앙에 배치합니다.
   },
   listItemText: {
     fontSize: 18,
+  }, 
+  textContainer: {
+    flex: 1, // 이름과 헤어샵 이름을 위한 공간을 최대로 활용합니다.
+    justifyContent: 'center',
   },
-  salonImage: {
-    width: '100%',
-    height: 200,
+  profileImage: {
+    width: 50, // 이미지 크기를 원하는 대로 조정합니다.
+    height: 50, // 이미지 크기를 원하는 대로 조정합니다.
+    borderRadius: 25, // 원형 이미지로 만들기 위해 반지름을 설정합니다.
   },
 });
 

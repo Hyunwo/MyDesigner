@@ -88,15 +88,6 @@ const MyProfileScreen = ({ navigation }) => {
         <Text style={styles.name}>{name}</Text>
       </View>
       <ServiceScreen onServicesUpdated={(services) => {}} />
-      <TouchableOpacity
-        style={styles.settingsButton}
-        onPress={() => navigation.navigate('설정')}
-      >
-        <Image
-          source={require('../assets/settings.png')}
-          style={styles.settingsIcon}
-        />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -134,15 +125,6 @@ const styles = StyleSheet.create({
   editButtonText: {
     fontSize: 16,
     color: '#000000',
-  },
-  settingsButton: {
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? 60 : 40, // iOS와 Android 상태바 높이가 다름
-    right: 15,
-  },
-  settingsIcon: {
-    width: 24,
-    height: 24,
   },
 });
 

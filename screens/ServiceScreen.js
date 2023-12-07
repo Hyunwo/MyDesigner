@@ -8,9 +8,9 @@ const ServiceScreen = ({ onServicesUpdated }) => {
   const [services, setServices] = useState({
     커트: [],
     펌: [],
-    염색: []
+    염색: [],
+    클리닉: []
   });
-
 
   useEffect(() => {
     // 서비스 정보를 Firestore에서 불러오는 함수
