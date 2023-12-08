@@ -233,14 +233,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   selectedTimeSlot: {
-    backgroundColor: '#00f',
+    backgroundColor: '#007bff',
   },
   timeSlotText: {
     fontSize: 16,
   },
   confirmButton: {
     padding: 15,
-    backgroundColor: 'blue',
+    backgroundColor: '#007bff',
     borderRadius: 10,
   },
   confirmButtonText: {

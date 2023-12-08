@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -6,45 +6,49 @@ import {
   TouchableOpacity,
   Text,
   FlatList,
-  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { firestore } from '../config/firebaseConfig'; // Firestore 구성을 임포트
+import { collection, getDocs } from 'firebase/firestore';
 
-const designers = [
-  // 더미 데이터
-  { id: '1', name: '김XX', tag: '상세한 설명 또는 태그 #1', isLiked: true },
-  { id: '2', name: '이YY', tag: '상세한 설명 또는 태그 #2', isLiked: false },
-  { id: '3', name: '박ZZ', tag: '상세한 설명 또는 태그 #3', isLiked: true },
-  // ... 추가 데이터
-];
-
-const SearchScreen = () => {
+const SearchScreen = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [results, setResults] = useState(designers); // 처음에는 모든 디자이너를 표시
+  const [designers, setDesigners] = useState([]); // Firestore에서 가져온 디자이너 목록
+  const [results, setResults] = useState([]); // 검색 결과
+
+  useEffect(() => {
+    const fetchDesigners = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(firestore, 'designers'));
+        const fetchedDesigners = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setDesigners(fetchedDesigners);
+        setResults(fetchedDesigners); // 초기 검색 결과는 모든 디자이너
+      } catch (error) {
+        console.error("Error fetching designers:", error);
+      }
+    };
+    fetchDesigners();
+  }, []);
 
   const handleSearch = (text) => {
     setSearchQuery(text);
-    if (text === '') {
-      setResults(designers); // 검색어가 비어있을 때는 모든 디자이너를 표시
-    } else {
-      const filteredDesigners = designers.filter((designer) =>
-        designer.name.includes(text) // 검색어와 이름이 일치하는지 검사
-      );
-      setResults(filteredDesigners); // 검색 결과를 상태로 설정
-    }
+    const filteredDesigners = designers.filter((designer) =>
+      designer.name.toLowerCase().includes(text.toLowerCase()) // 대소문자 구분 없이 검색
+    );
+    setResults(filteredDesigners); // 검색 결과를 상태로 설정
   };
 
   const renderDesigner = ({ item }) => (
-    <View style={styles.designerCard}>
+    <TouchableOpacity style={styles.designerCard} onPress={() => navigation.navigate('ReservationMenu', { designerId: item.id })}>
       <Icon name="person-circle-outline" size={40} color="#000" style={styles.designerIcon} />
       <View style={styles.designerInfo}>
         <Text style={styles.designerName}>{item.name}</Text>
-        <Text style={styles.designerTag}>{item.tag}</Text>
       </View>
-      <TouchableOpacity onPress={() => alert('Liked!')}>
         <Icon name={item.isLiked ? "heart" : "heart-outline"} size={25} color={item.isLiked ? "red" : "black"} />
-      </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

@@ -73,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>MyDesigner</Text>
       <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Search')}>
           <Image source={require("../assets/hairstyle.png")} style={styles.imagebutton} />
           <Text style={styles.text}>디자이너 및 검색</Text>
         </TouchableOpacity>
@@ -92,6 +92,7 @@ const HomeScreen = ({ navigation }) => {
         data={designers}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );

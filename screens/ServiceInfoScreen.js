@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 22,
-    color: '#E91E63',
+    color: '#007bff',
     textAlign: 'center',
     marginVertical: 8,
   },
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   bookingButton: {
-    backgroundColor: 'red',
+    backgroundColor: '#007bff',
     padding: 16,
     justifyContent: 'center',
     alignItems: 'center',

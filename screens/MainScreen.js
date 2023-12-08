@@ -4,12 +4,13 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 function MainScreen({ navigation }) {
   return (
     <View style={styles.container}>
+      <Text style={styles.headers}>디자이너와 고객을 매칭해주는</Text>
       <Text style={styles.header}>MyDesigner</Text>
       <TouchableOpacity
         style={[styles.button, styles.firstButton]}
         onPress={() => navigation.navigate('Who')}
       >
-        <Text style={styles.buttonText}>WhoScreen</Text>
+        <Text style={styles.buttonText}>Welcome!!</Text>
       </TouchableOpacity>
     </View>
   );
@@ -25,8 +26,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    fontSize: 24,
+    fontSize: 27,
     marginBottom: 30,
+  },
+  headers: {
+    fontSize: 20,
+    marginBottom: 10,
   },
   button: {
     height: 50,

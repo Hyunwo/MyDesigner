@@ -30,7 +30,7 @@ const DHomeScreen = ({navigation}) => {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>MyDesigner</Text>
       <View style={styles.menuContainer}>
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('')}>
@@ -43,17 +43,17 @@ const DHomeScreen = ({navigation}) => {
         </TouchableOpacity>
       </View>
       {/* 예약 내역을 표시하는 부분 */}
-      <View>
+      <ScrollView>
         {reservations.map((reservation, index) => (
           <View key={index} style={styles.reservationItem}>
-            <Text>이름: {reservation.name}</Text>
+            <Text>이름: {reservation.userName}</Text>
             <Text>날짜: {reservation.date}</Text>
             <Text>시간: {reservation.time}</Text>
             <Text>서비스: {reservation.serviceName}</Text>
           </View>
         ))}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
