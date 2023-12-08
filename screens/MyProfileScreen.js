@@ -76,6 +76,10 @@ const MyProfileScreen = ({ navigation }) => {
     }
    };
 
+   const openSettings = () => {
+    navigation.navigate('설정');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.profileSection}>
@@ -88,6 +92,12 @@ const MyProfileScreen = ({ navigation }) => {
         <Text style={styles.name}>{name}</Text>
       </View>
       <ServiceScreen onServicesUpdated={(services) => {}} />
+      <TouchableOpacity style={styles.settingsButton} onPress={openSettings}>
+        <Image
+          source={require('../assets/settings.png')}
+          style={styles.settingsIcon}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -125,6 +135,15 @@ const styles = StyleSheet.create({
   editButtonText: {
     fontSize: 16,
     color: '#000000',
+  },
+  settingsIcon: {
+    width: 24,
+    height: 24,
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 60 : 40, // iOS와 Android 상태바 높이가 다름
+    right: 30,
   },
 });
 

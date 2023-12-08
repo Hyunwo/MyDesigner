@@ -107,6 +107,8 @@ const styles = StyleSheet.create({
     fontSize: 27,
     fontWeight: 'bold',
     marginVertical: 10,
+    marginTop: 45,
+    marginLeft: 8,
   },
   menuContainer: {
     flexDirection: 'row',

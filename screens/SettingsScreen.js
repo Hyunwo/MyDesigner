@@ -7,9 +7,6 @@ import { firestore } from '../config/firebaseConfig';
 import { doc, deleteDoc } from 'firebase/firestore';
 
 const settingsOptions = [
-  { key: 'account', title: '계정' },
-  { key: 'notifications', title: '알림' },
-  { key: 'privacy', title: '개인정보 및 보안' },
   { key: 'logout', title: '로그아웃' },
   { key: 'secession', title: '회원탈퇴' },
 ];

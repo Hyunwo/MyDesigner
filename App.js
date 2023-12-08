@@ -41,7 +41,7 @@ const App = () => {
         <Stack.Screen name="DSignUp" component={DSignupScreen} options={{ title: '회원가입' }} />
         <Stack.Screen name="MapSelector" component={MapSelectorScreen} options={{ title: '헤어샵 검색' }} />
         <Stack.Screen name="DLogin" component={DLoginScreen} />
-        <Stack.Screen name="DHome" component={DHomeScreen} />
+        <Stack.Screen name="DHome" component={DHomeScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{ title: '프로필' }} />
         <Stack.Screen name="Service" component={ServiceScreen}/>
         <Stack.Screen name="ReservationMenu" component={ReservationMenuScreen}/>

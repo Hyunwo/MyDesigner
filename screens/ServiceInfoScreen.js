@@ -1,4 +1,5 @@
 // StudentCutScreen -> ServiceInfoScreen
+// ServiceInfoScreen 컴포넌트: 디자이너의 서비스 정보를 보여주는 화면
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,6 +15,7 @@ const ServiceInfoScreen = ({ route, navigation }) => {
     designerName: '',
     designerProfileUrl: '',
   });
+
   // 좋아요 수를 담을 상태
   const [likes, setLikes] = useState(0);
 
@@ -33,6 +35,7 @@ const ServiceInfoScreen = ({ route, navigation }) => {
           if (servicesArray && serviceIndex < servicesArray.length) {
             const selectedService = servicesArray[serviceIndex];
             if (selectedService) {
+              // 서비스 정보를 상태에 저장
               setServiceDetails({
                 serviceName: selectedService.name,
                 price: selectedService.price,
@@ -40,14 +43,8 @@ const ServiceInfoScreen = ({ route, navigation }) => {
                 designerName: designerData.name,
                 designerProfileUrl: designerData.profileImageUrl,
               });
-            } else {
-              console.log(`${selectedCategory} 카테고리의 서비스 정보를 찾을 수 없습니다. index: ${serviceIndex}`);
             }
-          } else {
-            console.log(`${selectedCategory} 서비스 배열이 비어있습니다.`);
           }
-        } else {
-          console.log(`디자이너 문서를 찾을 수 없습니다. ID: ${designerId}`);
         }
       } catch (error) {
         console.error("서비스 정보를 가져오는 중 오류 발생:", error);
@@ -57,24 +54,9 @@ const ServiceInfoScreen = ({ route, navigation }) => {
     getServiceDetails();
   }, [designerId, selectedCategory, serviceIndex]);
 
-  // 좋아요 버튼 이벤트 핸들러
-  const onLikePress = () => {
-    setLikes(prevLikes => prevLikes + 1); // 좋아요 수 증가
-  };
-
+  // 예약 버튼 클릭 핸들러
   const onBookingPress = () => {
-  
-    console.log("Booking Pressed with params:", {
-      designerProfileUrl: serviceDetails.designerProfileUrl,
-      designerName: serviceDetails.designerName,
-      selectedCategory: selectedCategory,
-      serviceIndex: serviceIndex,
-      serviceName: serviceDetails.serviceName,
-      servicePrice: serviceDetails.price,
-      salonName: serviceDetails.salonName,
-    });
-  
-    // 파라미터로 넘겨주기
+    // 예약 화면으로 파라미터 전달
     navigation.navigate('DateReservation', {
       designerProfileUrl: serviceDetails.designerProfileUrl,
       designerName: serviceDetails.designerName,
@@ -83,27 +65,23 @@ const ServiceInfoScreen = ({ route, navigation }) => {
       serviceName: serviceDetails.serviceName,
       servicePrice: serviceDetails.price,
       salonName: serviceDetails.salonName,
+      designerId: designerId,
     });
   };
 
   return (
     <ScrollView style={styles.container}>
-      {/* 헤더 부분: 좋아요 및 공유 아이콘 */}
+      {/* 좋아요 및 공유 아이콘 */}
       <View style={styles.header}>
-        <Ionicons name="heart-outline" size={24} color="black" onPress={onLikePress} />
+        <Ionicons name="heart-outline" size={24} color="black" onPress={() => setLikes(prevLikes => prevLikes + 1)} />
         <Text style={styles.likes}>{likes}</Text>
         <Ionicons name="share-social-outline" size={24} color="black" />
       </View>
-      
-      {/* 서비스 이름, 가격, 미용실 이름 표시 */}
+
+      {/* 서비스 정보 */}
       <Text style={styles.serviceTitle}>{serviceDetails.serviceName}</Text>
       <Text style={styles.price}>{serviceDetails.price}</Text>
       <Text style={styles.salonName}>@{serviceDetails.salonName}</Text>
-      
-      {/* 서비스 상세 정보 섹션 */}
-      <View style={styles.details}>
-        {/* 서비스 상세 정보를 렌더링 하는 부분 */}
-      </View>
 
       {/* 예약 버튼 */}
       <TouchableOpacity style={styles.bookingButton} onPress={onBookingPress}>

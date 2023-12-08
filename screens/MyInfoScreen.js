@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 import { storage } from '../config/firebaseConfig';
@@ -11,6 +11,7 @@ import { auth } from '../config/firebaseConfig';
 const MyInfoScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState(null);
   const [name, setName] = useState('');
+  const [reservations, setReservations] = useState([]);
 
   // 이미지 접근 권한
   useEffect(() => {
@@ -43,6 +44,25 @@ const MyInfoScreen = ({ navigation }) => {
       }
     };
     fetchProfileImageAndName();
+  }, []);
+
+  // Firebase Firestore에서 사용자의 예약 내역 가져오기
+  useEffect(() => {
+    const fetchReservations = async () => {
+      if (auth.currentUser) {
+        const firestoreRef = doc(firestore, `users/${auth.currentUser.uid}`);
+        const docSnap = await getDoc(firestoreRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          console.log("Fetched reservations:", userData.reservations);
+          if (userData.reservations) {
+            setReservations(Object.values(userData.reservations));
+          }
+        }
+      }
+    };
+    fetchReservations();
   }, []);
 
   const handleChoosePhoto = async () => {
@@ -78,7 +98,7 @@ const MyInfoScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.profileSection}>
         <TouchableOpacity onPress={handleChoosePhoto}>
           <Image
@@ -87,9 +107,19 @@ const MyInfoScreen = ({ navigation }) => {
           />
         </TouchableOpacity>
         <Text style={styles.name}>{name}</Text>
-        <TouchableOpacity style={styles.editButton} onPress={() => console.log('프로필 수정')}>
-          <Text style={styles.editButtonText}>프로필 수정</Text>
-        </TouchableOpacity>
+        {/* 사용자의 예약 내역 표시 */}
+        <View style={styles.reservationList}>
+          <Text style={styles.reservationTitle}>예약 내역:</Text>
+          {reservations.map((reservation, index) => (
+            <View key={index} style={styles.reservationItem}>
+              <Text style={styles.reservationText}>디자이너: {reservation.designerName}</Text>
+              <Text style={styles.reservationText}>미용실: {reservation.salonName}</Text>
+              <Text style={styles.reservationText}>날짜: {reservation.date}</Text>
+              <Text style={styles.reservationText}>시간: {reservation.time}</Text>
+              <Text style={styles.reservationText}>서비스: {reservation.serviceName}</Text>
+            </View>
+          ))}
+        </View>
       </View>
       <TouchableOpacity style={styles.settingsButton} onPress={openSettings}>
         <Image
@@ -97,19 +127,14 @@ const MyInfoScreen = ({ navigation }) => {
           style={styles.settingsIcon}
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.reservationButton} onPress={() => console.log('예약 내역')}>
-        <Text style={styles.reservationButtonText}>예약 내역</Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
   },
   profileSection: {
     alignItems: 'center',
@@ -127,38 +152,30 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 5,
   },
-  editButton: {
-    marginTop: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-    backgroundColor: '#E8E8E8', // A light grey background color for the button
-  },
-  editButtonText: {
-    fontSize: 16,
-    color: '#000000',
-  },
-  reservationButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
-    backgroundColor: '#E8E8E8', // A light grey background color for the button
-    alignSelf: 'stretch',
-    marginHorizontal: 20,
-  },
-  reservationButtonText: {
-    fontSize: 20,
-    color: '#000000',
-    textAlign: 'center',
-  },
   settingsButton: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? 60 : 40, // iOS와 Android 상태바 높이가 다름
-    right: 15,
+    right: 30,
   },
   settingsIcon: {
     width: 24,
     height: 24,
+  },
+  reservationList: {
+    marginTop: 20, // 이름과의 간격 조정
+  },
+  reservationTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  reservationItem: {
+    marginTop: 10,
+    backgroundColor: 'white',
+    padding: 30,
+    borderRadius: 5,
+  },
+  reservationText: {
+    fontSize: 16,
   },
 });
 

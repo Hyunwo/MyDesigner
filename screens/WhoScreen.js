@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 const WhoScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-        <Text style={styles.header}>Designer or Customer?</Text>
+        <Text style={styles.header}>디자이너인지 고객인지 선택해주세요!</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate('DLogin')}>
@@ -24,10 +24,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'pink',
+    backgroundColor: 'white',
   },
   header: {
-    fontSize: 24,
+    fontSize: 22,
     marginBottom: 30, // 헤더와 버튼 사이 간격 조정
   },
   button: {
@@ -37,6 +37,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#007AFF',
   },
   text: {
     color: '#007AFF',

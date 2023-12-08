@@ -1,35 +1,59 @@
-import React from 'react';
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { firestore } from '../config/firebaseConfig';
+import { collection, getDocs } from 'firebase/firestore';
 
 const DHomeScreen = ({navigation}) => {
+  const [reservations, setReservations] = useState([]);
+
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        // 'designers' 컬렉션에서 문서들을 가져옴
+        const querySnapshot = await getDocs(collection(firestore, 'designers'));
+        let allReservations = [];
+        querySnapshot.docs.forEach(doc => {
+          const designerData = doc.data();
+          // 각 디자이너의 예약 정보를 allReservations 배열에 추가
+          if (designerData.reservations) {
+            allReservations.push(...designerData.reservations);
+          }
+        });
+
+        console.log("Fetched reservations:", allReservations); // 콘솔 로그로 결과 확인
+        setReservations(allReservations);
+      } catch (error) {
+        console.error("Error fetching reservations:", error); // 에러 로깅
+      }
+    };
+    fetchReservations();
+  }, []);
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>MyDesigner</Text>
       <View style={styles.menuContainer}>
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => navigation.navigate('')}
-        >
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('')}>
           <Image source={require("../assets/hairstyle.png")} style={styles.imagebutton} />
           <Text style={styles.text}>고객 리스트</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.menuItem}
-          onPress={() => navigation.navigate('')}
-        >
-          <Image source={require("../assets/location.png")} style={styles.imagebutton} />
-          <Text style={styles.text}>예약 내역 확인</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => navigation.navigate('MyProfile')}
-        >
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('MyProfile')} >
           <Image source={require("../assets/info.png")} style={styles.imagebutton} />
           <Text style={styles.text}>내 프로필</Text>
         </TouchableOpacity>
       </View>
-    </View>
-    // 추가적으로 하단 탭 바 네비게이션을 표시하는 컴포넌트가 필요할 것.
+      {/* 예약 내역을 표시하는 부분 */}
+      <View>
+        {reservations.map((reservation, index) => (
+          <View key={index} style={styles.reservationItem}>
+            <Text>이름: {reservation.name}</Text>
+            <Text>날짜: {reservation.date}</Text>
+            <Text>시간: {reservation.time}</Text>
+            <Text>서비스: {reservation.serviceName}</Text>
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 };
 
@@ -40,9 +64,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   title: {
-    fontSize: 20,
+    fontSize: 27,
     fontWeight: 'bold',
     marginVertical: 10,
+    marginTop: 45,
+    marginLeft: 8,
   },
   searchInput: {
     height: 40,
@@ -54,7 +80,7 @@ const styles = StyleSheet.create({
   },
   menuContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginVertical: 10,
   },
   menuItem: {
@@ -67,6 +93,11 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 5,
+  },
+  reservationItem:{
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#cccccc',
   },
 });
 
