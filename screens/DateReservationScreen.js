@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const DateReservtionScreen = ({navigation}) => {
+const DateReservtionScreen = ({route, navigation}) => {
   const [date, setDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -49,6 +49,24 @@ const DateReservtionScreen = ({navigation}) => {
     return rows;
   };
 
+  const onNextPress = () => {
+    if (date && selectedTime) {
+      const paramsToPass = {
+        ...route.params, // Spread operator to pass along all previous parameters
+        selectedDate: date.toLocaleDateString(),
+        selectedTime: selectedTime,
+      };
+  
+      // 로깅을 추가하여 파라미터를 콘솔에 출력합니다.
+      console.log('Passing parameters to FinalReservation:', paramsToPass);
+  
+      navigation.navigate('FinalReservation', paramsToPass);
+    } else {
+      // Handle the case where date or time is not selected
+      alert("Please select both a date and a time.");
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.datePickerContainer}>
@@ -61,7 +79,7 @@ const DateReservtionScreen = ({navigation}) => {
             mode={'date'}
             display="calendar"
             onChange={onChange}
-            minimumDate={new Date()} // Restrict past dates
+            minimumDate={new Date()}
           />
         )}
       </View>
@@ -75,13 +93,9 @@ const DateReservtionScreen = ({navigation}) => {
           선택한 날짜와 시간: {date.toLocaleDateString()} {selectedTime}
         </Text>
       )}
-
-
-      <TouchableOpacity style={styles.confirmButton} onPress={() => navigation.navigate('')}>
+      <TouchableOpacity style={styles.confirmButton} onPress={onNextPress}>
         <Text style={styles.confirmButtonText}>다음</Text>
       </TouchableOpacity>
-
-      
     </ScrollView>
   );
 };

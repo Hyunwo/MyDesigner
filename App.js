@@ -18,8 +18,9 @@ import SettingsScreen from './screens/SettingsScreen';
 import MyProfileScreen from './screens/MyProfileScreen';
 import ServiceScreen from './screens/ServiceScreen';
 import ReservationMenuScreen from './screens/ReservationMenuScreen';
-import DateReservtionScreen from './screens/DateReservtionScreen';
+import DateReservationScreen from './screens/DateReservationScreen';
 import ServiceInfoScreen from './screens/ServiceInfoScreen'
+import FinalReservationScreen from './screens/FinalReservationScreen';
 
 const Stack = createStackNavigator();
 
@@ -44,8 +45,9 @@ const App = () => {
         <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{ title: '프로필' }} />
         <Stack.Screen name="Service" component={ServiceScreen}/>
         <Stack.Screen name="ReservationMenu" component={ReservationMenuScreen}/>
-        <Stack.Screen name="DateReservtion" component={DateReservtionScreen} />
+        <Stack.Screen name="DateReservation" component={DateReservationScreen} />
         <Stack.Screen name="ServiceInfo" component={ServiceInfoScreen} />
+        <Stack.Screen name="FinalReservation" component={FinalReservationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

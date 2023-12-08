@@ -11,6 +11,8 @@ const ServiceInfoScreen = ({ route, navigation }) => {
     serviceName: '',
     price: '',
     salonName: '',
+    designerName: '',
+    designerProfileUrl: '',
   });
   // 좋아요 수를 담을 상태
   const [likes, setLikes] = useState(0);
@@ -24,7 +26,7 @@ const ServiceInfoScreen = ({ route, navigation }) => {
       try {
         const designerDocRef = doc(firestore, `designers/${designerId}`);
         const designerDocSnap = await getDoc(designerDocRef);
-    
+
         if (designerDocSnap.exists()) {
           const designerData = designerDocSnap.data();
           const servicesArray = designerData.services[selectedCategory];
@@ -35,6 +37,8 @@ const ServiceInfoScreen = ({ route, navigation }) => {
                 serviceName: selectedService.name,
                 price: selectedService.price,
                 salonName: designerData.salonName,
+                designerName: designerData.name,
+                designerProfileUrl: designerData.profileImageUrl,
               });
             } else {
               console.log(`${selectedCategory} 카테고리의 서비스 정보를 찾을 수 없습니다. index: ${serviceIndex}`);
@@ -58,6 +62,30 @@ const ServiceInfoScreen = ({ route, navigation }) => {
     setLikes(prevLikes => prevLikes + 1); // 좋아요 수 증가
   };
 
+  const onBookingPress = () => {
+  
+    console.log("Booking Pressed with params:", {
+      designerProfileUrl: serviceDetails.designerProfileUrl,
+      designerName: serviceDetails.designerName,
+      selectedCategory: selectedCategory,
+      serviceIndex: serviceIndex,
+      serviceName: serviceDetails.serviceName,
+      servicePrice: serviceDetails.price,
+      salonName: serviceDetails.salonName,
+    });
+  
+    // 파라미터로 넘겨주기
+    navigation.navigate('DateReservation', {
+      designerProfileUrl: serviceDetails.designerProfileUrl,
+      designerName: serviceDetails.designerName,
+      selectedCategory: selectedCategory,
+      serviceIndex: serviceIndex,
+      serviceName: serviceDetails.serviceName,
+      servicePrice: serviceDetails.price,
+      salonName: serviceDetails.salonName,
+    });
+  };
+
   return (
     <ScrollView style={styles.container}>
       {/* 헤더 부분: 좋아요 및 공유 아이콘 */}
@@ -78,7 +106,7 @@ const ServiceInfoScreen = ({ route, navigation }) => {
       </View>
 
       {/* 예약 버튼 */}
-      <TouchableOpacity style={styles.bookingButton} onPress={() => navigation.navigate('DateReservtion')}>
+      <TouchableOpacity style={styles.bookingButton} onPress={onBookingPress}>
         <Text style={styles.bookingButtonText}>예약하기</Text>
       </TouchableOpacity>
     </ScrollView>
