@@ -33,7 +33,7 @@ const DHomeScreen = ({navigation}) => {
     <View style={styles.container}>
       <Text style={styles.title}>MyDesigner</Text>
       <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('UserList')}>
           <Image source={require("../assets/hairstyle.png")} style={styles.imagebutton} />
           <Text style={styles.text}>고객 리스트</Text>
         </TouchableOpacity>

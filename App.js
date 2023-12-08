@@ -21,6 +21,7 @@ import ReservationMenuScreen from './screens/ReservationMenuScreen';
 import DateReservationScreen from './screens/DateReservationScreen';
 import ServiceInfoScreen from './screens/ServiceInfoScreen'
 import FinalReservationScreen from './screens/FinalReservationScreen';
+import UserList from './screens/userList';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +49,7 @@ const App = () => {
         <Stack.Screen name="DateReservation" component={DateReservationScreen} options={{ title: '' }}/>
         <Stack.Screen name="ServiceInfo" component={ServiceInfoScreen}options={{ title: '' }} />
         <Stack.Screen name="FinalReservation" component={FinalReservationScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="UserList" component={UserList} options={{ title: '고객 리스트' }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
