@@ -8,7 +8,7 @@ import {
   FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { firestore } from '../config/firebaseConfig'; // Firestore 구성을 임포트
+import { firestore } from '../../config/firebaseConfig'; // Firestore 구성을 임포트
 import { collection, getDocs } from 'firebase/firestore';
 
 const SearchScreen = ({navigation}) => {

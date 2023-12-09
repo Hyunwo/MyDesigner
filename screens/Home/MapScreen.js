@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, Alert, TouchableOpacity, Text, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { firestore } from '../config/firebaseConfig';
+import { firestore } from '../../config/firebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
 
 const MapScreen = ({navigation}) => {
@@ -126,7 +126,7 @@ const MapScreen = ({navigation}) => {
       {/* 현재 위치로 돌아가는 버튼 */}
       <TouchableOpacity style={styles.myLocationButton} onPress={goToInitialLocation}>
         <Image
-          source={require('../assets/maplocation.png')}
+          source={require('../../assets/maplocation.png')}
           style={styles.myLocationIcon}
         />
       </TouchableOpacity>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { firestore } from '../config/firebaseConfig';
+import { firestore } from '../../config/firebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
 
 const DHomeScreen = ({navigation}) => {
@@ -34,11 +34,11 @@ const DHomeScreen = ({navigation}) => {
       <Text style={styles.title}>MyDesigner</Text>
       <View style={styles.menuContainer}>
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('UserList')}>
-          <Image source={require("../assets/hairstyle.png")} style={styles.imagebutton} />
+          <Image source={require("../../assets/hairstyle.png")} style={styles.imagebutton} />
           <Text style={styles.text}>고객 리스트</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('MyProfile')} >
-          <Image source={require("../assets/info.png")} style={styles.imagebutton} />
+          <Image source={require("../../assets/info.png")} style={styles.imagebutton} />
           <Text style={styles.text}>내 프로필</Text>
         </TouchableOpacity>
       </View>

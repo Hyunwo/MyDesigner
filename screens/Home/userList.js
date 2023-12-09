@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { firestore } from '../config/firebaseConfig';
+import { firestore } from '../../config/firebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
 
 const UserList = () => {

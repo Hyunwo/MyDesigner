@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { firestore } from '../config/firebaseConfig';
+import { firestore } from '../../config/firebaseConfig';
 import { doc, setDoc, arrayUnion } from 'firebase/firestore';
-import { auth } from '../config/firebaseConfig';
+import { auth } from '../../config/firebaseConfig';
 
 const fetchUserName = async () => {
   if (auth.currentUser) {

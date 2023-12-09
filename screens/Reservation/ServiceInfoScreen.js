@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { firestore } from '../config/firebaseConfig';
+import { firestore } from '../../config/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 
 const ServiceInfoScreen = ({ route, navigation }) => {

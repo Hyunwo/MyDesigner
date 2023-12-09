@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
-import { firestore } from '../config/firebaseConfig';
+import { firestore } from '../../config/firebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
 import * as Location from 'expo-location';
 
@@ -74,15 +74,15 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.title}>MyDesigner</Text>
       <View style={styles.menuContainer}>
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Search')}>
-          <Image source={require("../assets/hairstyle.png")} style={styles.imagebutton} />
+          <Image source={require("../../assets/hairstyle.png")} style={styles.imagebutton} />
           <Text style={styles.text}>디자이너 및 검색</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}  onPress={() => navigation.navigate('Map')}>
-          <Image source={require("../assets/location.png")} style={styles.imagebutton} />
+          <Image source={require("../../assets/location.png")} style={styles.imagebutton} />
           <Text style={styles.text}>내 근처 디자이너 찾기</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('MyInfo')}>
-          <Image source={require("../assets/my_info.png")} style={styles.imagebutton} />
+          <Image source={require("../../assets/my_info.png")} style={styles.imagebutton} />
           <Text style={styles.text}>내정보</Text>
         </TouchableOpacity>
       </View>

@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
 
-import { auth } from '../config/firebaseConfig';
+import { auth } from '../../config/firebaseConfig';
 import { signOut } from 'firebase/auth';
-import { firestore } from '../config/firebaseConfig';
+import { firestore } from '../../config/firebaseConfig';
 import { doc, deleteDoc } from 'firebase/firestore';
 
 const settingsOptions = [

@@ -1,9 +1,10 @@
 // ServiceScreen.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Alert } from 'react-native';
-import { auth } from '../config/firebaseConfig';
+import { auth } from '../../config/firebaseConfig';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { firestore } from '../config/firebaseConfig';
+import { firestore } from '../../config/firebaseConfig';
+
 const ServiceScreen = ({ onServicesUpdated }) => {
   const [services, setServices] = useState({
     커트: [],

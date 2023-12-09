@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, Alert } from 'react-native';
-import { firestore } from '../config/firebaseConfig';
+import { firestore } from '../../config/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 
 const DesignerDetailsScreen = ({ route }) => {

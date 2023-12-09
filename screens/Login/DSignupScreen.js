@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth, firestore } from '../config/firebaseConfig';
+import { auth, firestore } from '../../config/firebaseConfig';
 import { doc, setDoc } from 'firebase/firestore';
 
 const DesignerProfileScreen = ({ route, navigation }) => {

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
-import { auth, firestore } from '../config/firebaseConfig'
+import { auth, firestore } from '../../config/firebaseConfig'
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState(''); // 이메일과 비밀번호,이름을 위한 상태 변수
