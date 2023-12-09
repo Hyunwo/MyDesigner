@@ -16,7 +16,10 @@ const ReservationMenuScreen = ({ route, navigation }) => {
 
       if (docSnap.exists()) {
         const data = docSnap.data();
+        console.log("Fetched data:", data); // 로그로 데이터 출력
         setServices(data.services || {}); // Firestore에서 서비스 데이터를 가져와서 상태에 저장
+      }else {
+        console.log("No such document!"); // 문서가 없는 경우 로그 출력
       }
     };
 

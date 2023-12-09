@@ -12,10 +12,15 @@ const fetchUserName = async () => {
     const docSnap = await getDoc(firestoreRef);
 
     if (docSnap.exists()) {
+      console.log("사용자 이름:", docSnap.data().name);
       return docSnap.data().name; // 사용자의 이름을 반환
+    } else {
+      console.log("사용자 문서가 존재하지 않음");
     }
+  } else {
+    console.log("로그인된 사용자가 없음");
   }
-  return 'Unknown User'; // 문서가 없거나, 사용자 이름이 설정되지 않은 경우
+  return 'Unknown User';
 };
 
 const DateReservtionScreen = ({route, navigation}) => {
@@ -25,6 +30,7 @@ const DateReservtionScreen = ({route, navigation}) => {
   const [userName, setUserName] = useState('Unknown User');
   const [unavailableTimes, setUnavailableTimes] = useState([]);
 
+  // 선택된 날짜와 디자이너 ID를 기반으로 예약된 시간을 가져오는 함수
   const fetchReservations = async (designerId, selectedDate) => {
     const designerDocRef = doc(firestore, `designers/${designerId}`);
     const docSnap = await getDoc(designerDocRef);
@@ -39,11 +45,11 @@ const DateReservtionScreen = ({route, navigation}) => {
     }
   };
 
-  // Ensure the times array has four time slots per each row
+  // 시간 슬롯 배열
   const times = ['10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00'];
 
   useEffect(() => {
-    // 선택된 날짜와 디자이너 ID를 기반으로 예약된 시간을 가져오는 함수
+    // 날짜와 디자이너 ID가 설정되어 있을 때 예약된 시간 가져오기
     const fetchReservations = async (designerId, selectedDate) => {
       const designerDocRef = doc(firestore, `designers/${designerId}`);
       const docSnap = await getDoc(designerDocRef);
@@ -74,6 +80,7 @@ const DateReservtionScreen = ({route, navigation}) => {
     getUserName();
   }, [date, route.params.designerId]);
 
+  // 날짜 선택 변경 핸들러
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
@@ -82,15 +89,17 @@ const DateReservtionScreen = ({route, navigation}) => {
     }
   };
 
+  // 날짜 선택 모드 설정
   const showMode = (currentMode) => {
     setShowDatePicker(true);
   };
 
+  // 시간 선택 핸들러
   const handleSelectTime = (time) => {
     setSelectedTime(time);
   };
 
-  // Render time slots in a grid layout with four slots per row
+  // 시간 슬롯을 그리드 레이아웃으로 렌더링하는 함수
   const renderTimeSlots = () => {
     let rows = [];
     for (let i = 0; i < times.length; i += 4) {
@@ -122,6 +131,8 @@ const DateReservtionScreen = ({route, navigation}) => {
   
 
   const saveReservation = async (reservationDetails) => {
+    const userName = await fetchUserName(); // 사용자 이름 가져오기
+    console.log("예약을 저장하기 전 사용자 이름:", userName);
     const userDocRef = doc(firestore, `users/${auth.currentUser.uid}`);
     const designerDocRef = doc(firestore, `designers/${route.params.designerId}`);
 

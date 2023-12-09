@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  FlatList,
-} from 'react-native';
+import { View, TextInput, StyleSheet, TouchableOpacity, Text, FlatList, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { firestore } from '../../config/firebaseConfig'; // Firestore 구성을 임포트
 import { collection, getDocs } from 'firebase/firestore';
@@ -43,11 +36,15 @@ const SearchScreen = ({navigation}) => {
 
   const renderDesigner = ({ item }) => (
     <TouchableOpacity style={styles.designerCard} onPress={() => navigation.navigate('ReservationMenu', { designerId: item.id })}>
-      <Icon name="person-circle-outline" size={40} color="#000" style={styles.designerIcon} />
+      <Image
+        source={{ uri: item.profileImageUrl }}
+        style={styles.designerImage}
+        resizeMode="cover"
+      />
       <View style={styles.designerInfo}>
         <Text style={styles.designerName}>{item.name}</Text>
       </View>
-        <Icon name={item.isLiked ? "heart" : "heart-outline"} size={25} color={item.isLiked ? "red" : "black"} />
+      <Icon name={item.isLiked ? "heart" : "heart-outline"} size={25} color={item.isLiked ? "red" : "black"} />
     </TouchableOpacity>
   );
 
@@ -117,6 +114,12 @@ const styles = StyleSheet.create({
   },
   designerTag: {
     color: 'grey',
+  },
+  designerImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
   },
 });
 

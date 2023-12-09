@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { firestore } from '../../config/firebaseConfig';
-import { collection, getDocs } from 'firebase/firestore';
+import { firestore, auth } from '../../config/firebaseConfig';
+import { collection, getDoc, doc } from 'firebase/firestore';
 
 const DHomeScreen = ({navigation}) => {
   const [reservations, setReservations] = useState([]);
@@ -9,21 +9,22 @@ const DHomeScreen = ({navigation}) => {
   useEffect(() => {
     const fetchReservations = async () => {
       try {
-        // 'designers' 컬렉션에서 문서들을 가져옴
-        const querySnapshot = await getDocs(collection(firestore, 'designers'));
-        let allReservations = [];
-        querySnapshot.docs.forEach(doc => {
-          const designerData = doc.data();
-          // 각 디자이너의 예약 정보를 allReservations 배열에 추가
+        // 현재 로그인한 디자이너의 ID를 사용하여 Firestore에서 문서 조회
+        const designerId = auth.currentUser.uid; // 로그인한 디자이너의 ID를 얻어야 함
+        const designerDocRef = doc(firestore, `designers/${designerId}`);
+        const designerDocSnap = await getDoc(designerDocRef);
+  
+        if (designerDocSnap.exists()) {
+          // 디자이너의 예약 정보만을 추출
+          const designerData = designerDocSnap.data();
           if (designerData.reservations) {
-            allReservations.push(...designerData.reservations);
+            setReservations(designerData.reservations);
           }
-        });
-
-        console.log("Fetched reservations:", allReservations); // 콘솔 로그로 결과 확인
-        setReservations(allReservations);
+        } else {
+          console.log("No reservations found for the designer");
+        }
       } catch (error) {
-        console.error("Error fetching reservations:", error); // 에러 로깅
+        console.error("Error fetching reservations:", error);
       }
     };
     fetchReservations();
