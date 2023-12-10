@@ -46,7 +46,7 @@
 
 - 프로필에서 스타일 및 가격 등록
 <div align="left">
-  <img width="30%" src="https:/https://github.com/Hyunwo/MyDesigner/assets/75519996/e7f94083-08e4-4282-b7ee-6f0be665a038">
+  <img width="30%" src="https://github.com/Hyunwo/MyDesigner/assets/75519996/e7f94083-08e4-4282-b7ee-6f0be665a038">
 </div>
 
 ## Built With
