@@ -1,33 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { firestore, auth } from '../../config/firebaseConfig';
-import { collection, getDoc, doc } from 'firebase/firestore';
+import { collection, getDoc, doc, onSnapshot } from 'firebase/firestore';
 
 const DHomeScreen = ({navigation}) => {
   const [reservations, setReservations] = useState([]);
 
   useEffect(() => {
-    const fetchReservations = async () => {
-      try {
-        // 현재 로그인한 디자이너의 ID를 사용하여 Firestore에서 문서 조회
-        const designerId = auth.currentUser.uid; // 로그인한 디자이너의 ID를 얻어야 함
-        const designerDocRef = doc(firestore, `designers/${designerId}`);
-        const designerDocSnap = await getDoc(designerDocRef);
+    // 로그인한 디자이너의 ID를 확인합니다.
+    const designerId = auth.currentUser?.uid;
+    if (!designerId) {
+      console.log('No designer is logged in.');
+      return;
+    }
   
-        if (designerDocSnap.exists()) {
-          // 디자이너의 예약 정보만을 추출
-          const designerData = designerDocSnap.data();
-          if (designerData.reservations) {
-            setReservations(designerData.reservations);
-          }
+    // 로그인한 디자이너의 문서에 대한 실시간 리스너를 설정합니다.
+    const designerDocRef = doc(firestore, `designers/${designerId}`);
+    const unsubscribe = onSnapshot(designerDocRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const designerData = docSnapshot.data();
+        if (designerData.reservations) {
+          setReservations(designerData.reservations);
         } else {
-          console.log("No reservations found for the designer");
+          setReservations([]);
         }
-      } catch (error) {
-        console.error("Error fetching reservations:", error);
+      } else {
+        console.log("No reservations found for the designer");
       }
-    };
-    fetchReservations();
+    }, (error) => {
+      console.error("Error fetching reservations:", error);
+    });
+  
+    // 컴포넌트가 언마운트될 때 리스너를 해제합니다.
+    return () => unsubscribe();
   }, []);
 
   return (

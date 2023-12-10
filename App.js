@@ -21,7 +21,7 @@ import ReservationMenuScreen from './screens/Reservation/ReservationMenuScreen';
 import DateReservationScreen from './screens/Reservation/DateReservationScreen';
 import ServiceInfoScreen from './screens/Reservation/ServiceInfoScreen'
 import FinalReservationScreen from './screens/Reservation/FinalReservationScreen';
-import UserList from './screens/Home/userList';
+import UserList from './screens/Home/UserList';
 
 const Stack = createStackNavigator();
 
