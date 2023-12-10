@@ -51,12 +51,11 @@
 
 ## Built With
 
-- [React Native Expo]
-- [Firebase]
+- [React Native Expo]("https://expo.dev/")
+- [Firebase]("https://firebase.google.com/")
 
 ## Architecture
 
 <div align="center">
-  <img width="55%" alt="Architecture" src="https://github.com/Hyunwo/MyDesigner/assets/75519996/31cce69e-b926-49c8-a4e2-65c692815f02
-">
+  <img width="55%" alt="Architecture" src="https://github.com/Hyunwo/MyDesigner/assets/75519996/7e6afd29-3d9f-47d4-a4bc-c458be3b4ece">
 </div>
