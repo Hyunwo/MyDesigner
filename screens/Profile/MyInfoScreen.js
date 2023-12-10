@@ -55,16 +55,14 @@ const MyInfoScreen = ({ navigation }) => {
 
         if (docSnap.exists()) {
           const userData = docSnap.data();
-          console.log("Fetched reservations:", userData.reservations);
-          if (userData.reservations) {
-            setReservations(Object.values(userData.reservations));
-          }
+          setReservations(userData.reservations || []);
         }
       }
     };
     fetchReservations();
   }, []);
 
+  // 이미지 선택
   const handleChoosePhoto = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -77,18 +75,11 @@ const MyInfoScreen = ({ navigation }) => {
       // Firebase Storage에 이미지 업로드
       const uri = result.assets[0].uri;
       const blob = await (await fetch(uri)).blob();
-
       const imageRef = firebaseStorageRef(storage, `profile/${auth.currentUser.uid}`);
       await uploadBytes(imageRef, blob);
-
-      // 업로드된 이미지 URL 가져오기
-      const downloadURL = await getDownloadURL(imageRef);
-
-      // Firestore에 이미지 URL 저장
-      const firestoreRef = doc(firestore, `users/${auth.currentUser.uid}`);
+      const downloadURL = await getDownloadURL(imageRef);   // 업로드된 이미지 URL 가져오기
+      const firestoreRef = doc(firestore, `users/${auth.currentUser.uid}`);   // Firestore에 이미지 URL 저장
       await setDoc(firestoreRef, { profileImageUrl: downloadURL }, { merge: true });
-      
-      // 상태 업데이트해서 UI에 표시
       setPhoto(downloadURL);
     }
    };
@@ -102,7 +93,7 @@ const MyInfoScreen = ({ navigation }) => {
       <View style={styles.profileSection}>
         <TouchableOpacity onPress={handleChoosePhoto}>
           <Image
-            source={photo ? { uri: photo } : require('../../assets/profile.png')} // Provide your default avatar image
+            source={photo ? { uri: photo } : require('../../assets/profile.png')}
             style={styles.avatar}
           />
         </TouchableOpacity>
@@ -144,7 +135,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#C4C4C4', // A placeholder color
+    backgroundColor: '#C4C4C4',
   },
   name: {
     fontSize: 24,
@@ -162,7 +153,7 @@ const styles = StyleSheet.create({
     height: 24,
   },
   reservationList: {
-    marginTop: 20, // 이름과의 간격 조정
+    marginTop: 20,
   },
   reservationTitle: {
     fontSize: 20,

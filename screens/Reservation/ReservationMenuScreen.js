@@ -7,9 +7,10 @@ import { doc, getDoc } from 'firebase/firestore';
 const ReservationMenuScreen = ({ route, navigation }) => {
   const [services, setServices] = useState({});
   const [selectedCategory, setSelectedCategory] = useState('커트');
-  const { designerId } = route.params;
+  const { designerId } = route.params;    // 네비게이션 파라미터로부터 디자이너 ID를 받아옴
 
   useEffect(() => {
+    // Firestore에서 선택된 디자이너의 서비스 목록을 가져오는 함수
     const fetchServices = async () => {
       const docRef = doc(firestore, 'designers', designerId);
       const docSnap = await getDoc(docRef);
@@ -19,14 +20,15 @@ const ReservationMenuScreen = ({ route, navigation }) => {
         setServices(data.services || {}); // Firestore에서 서비스 데이터를 가져와서 상태에 저장
       }
     };
-
     fetchServices();
   }, [designerId]);
 
+  // 서비스 카테고리 목록
   const categories = ['커트', '펌', '염색', '클리닉'];
 
+  // 서비스 선택 핸들러 함수
   const handleServiceSelect = (service, index) => {
-    navigation.navigate('ServiceInfo', {
+    navigation.navigate('ServiceInfo', {    // 선택된 서비스 정보와 함께 'ServiceInfo' 화면으로 네비게이션
       designerId: designerId,
       selectedCategory: selectedCategory,
       serviceIndex: index
@@ -68,95 +70,66 @@ const ReservationMenuScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-      },
-      profileImage: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
-        alignSelf: 'center',
-        marginTop: 32,
-      },
-      name: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        marginTop: 16,
-        textAlign: 'center',
-      },
-      title: {
-        textAlign: 'center',
-        color: 'gray',
-        marginTop: 4,
-      },
-      salon: {
-        textAlign: 'center',
-        color: 'gray',
-        marginTop: 4,
-      },
-      description: {
-        textAlign: 'center',
-        color: 'gray',
-        marginTop: 4,
-        marginBottom: 16,
-      },
-      interactionRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        paddingVertical: 16,
-      },
-      interactionButton: {
-        alignItems: 'center',
-      },
-      interactionText: {
-        fontSize: 16,
-      },
-      categoriesRow: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        paddingVertical: 16,
-      },
-      categoryButton: {
-        padding: 8,
-        marginHorizontal: 4,
-        backgroundColor: '#e1e1e1',
-        borderRadius: 20,
-      },
-      selectedCategory: {
-        backgroundColor: '#007bff',
-      },
-      categoryText: {
-        color: 'black',
-        fontSize: 16,
-      },
-      menuSection: {
-        paddingHorizontal: 32,
-        paddingTop: 16,
-      },
-      menuTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        paddingBottom: 16,
-      },
-      menuItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        paddingVertical: 8,
-        borderBottomWidth: 1,
-        borderBottomColor: '#e1e1e1',
-      },
-      menuItemText: {
-        fontSize: 18,
-      },
-      menuItemRight: {
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      menuItemPrice: {
-        fontSize: 18,
-        color: '#007bff',
-      },
+  container: {
+      flex: 1,
+      backgroundColor: '#fff',
+  },
+  name: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  title: {
+    textAlign: 'center',
+    color: 'gray',
+    marginTop: 4,
+  },
+  categoriesRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 16,
+  },
+  categoryButton: {
+    padding: 8,
+    marginHorizontal: 4,
+    backgroundColor: '#e1e1e1',
+    borderRadius: 20,
+  },
+  selectedCategory: {
+    backgroundColor: '#007bff',
+  },
+  categoryText: {
+    color: 'black',
+    fontSize: 16,
+  },
+  menuSection: {
+    paddingHorizontal: 32,
+    paddingTop: 16,
+  },
+  menuTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingBottom: 16,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e1e1e1',
+  },
+  menuItemText: {
+    fontSize: 18,
+  },
+  menuItemRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  menuItemPrice: {
+    fontSize: 18,
+    color: '#007bff',
+  },
 });
 
 export default ReservationMenuScreen;

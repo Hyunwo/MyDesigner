@@ -16,12 +16,12 @@ import DLoginScreen from './screens/Login/DLoginScreen';
 import DHomeScreen from './screens/Home/DHomeScreen';
 import SettingsScreen from './screens/Profile/SettingsScreen';
 import MyProfileScreen from './screens/Profile/MyProfileScreen';
+import UserList from './screens/Home/UserList';
 import ServiceScreen from './screens/Profile/ServiceScreen';
 import ReservationMenuScreen from './screens/Reservation/ReservationMenuScreen';
 import DateReservationScreen from './screens/Reservation/DateReservationScreen';
 import ServiceInfoScreen from './screens/Reservation/ServiceInfoScreen'
 import FinalReservationScreen from './screens/Reservation/FinalReservationScreen';
-import UserList from './screens/Home/UserList';
 
 const Stack = createStackNavigator();
 
@@ -44,12 +44,12 @@ const App = () => {
         <Stack.Screen name="DLogin" component={DLoginScreen} options={{ title: '로그인' }}/>
         <Stack.Screen name="DHome" component={DHomeScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="MyProfile" component={MyProfileScreen} options={{ title: '프로필' }} />
+        <Stack.Screen name="UserList" component={UserList} options={{ title: '고객 리스트' }}/>
         <Stack.Screen name="Service" component={ServiceScreen}/>
         <Stack.Screen name="ReservationMenu" component={ReservationMenuScreen} options={{ title: '' }}/>
         <Stack.Screen name="DateReservation" component={DateReservationScreen} options={{ title: '' }}/>
         <Stack.Screen name="ServiceInfo" component={ServiceInfoScreen}options={{ title: '' }} />
         <Stack.Screen name="FinalReservation" component={FinalReservationScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name="UserList" component={UserList} options={{ title: '고객 리스트' }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,37 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { firestore, auth } from '../../config/firebaseConfig';
-import { collection, getDoc, doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 const DHomeScreen = ({navigation}) => {
   const [reservations, setReservations] = useState([]);
 
   useEffect(() => {
-    // 로그인한 디자이너의 ID를 확인합니다.
+    // 로그인한 디자이너의 ID를 확인
     const designerId = auth.currentUser?.uid;
     if (!designerId) {
-      console.log('No designer is logged in.');
+      console.log('로그인한 디자이너가 없습니다.');
       return;
     }
   
-    // 로그인한 디자이너의 문서에 대한 실시간 리스너를 설정합니다.
+    // 로그인한 디자이너의 예약 정보를 실시간으로 가져오기 위한 리스너 설정
     const designerDocRef = doc(firestore, `designers/${designerId}`);
     const unsubscribe = onSnapshot(designerDocRef, (docSnapshot) => {
-      if (docSnapshot.exists()) {
+      if (docSnapshot.exists()) {   // 예약 정보가 존재하면 상태에 설정
         const designerData = docSnapshot.data();
-        if (designerData.reservations) {
-          setReservations(designerData.reservations);
-        } else {
-          setReservations([]);
-        }
-      } else {
-        console.log("No reservations found for the designer");
+        setReservations(designerData.reservations || []);
       }
     }, (error) => {
       console.error("Error fetching reservations:", error);
     });
-  
-    // 컴포넌트가 언마운트될 때 리스너를 해제합니다.
+    // 컴포넌트가 언마운트될 때 리스너를 해제
     return () => unsubscribe();
   }, []);
 
@@ -75,14 +68,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginTop: 45,
     marginLeft: 8,
-  },
-  searchInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 10,
   },
   menuContainer: {
     flexDirection: 'row',

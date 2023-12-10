@@ -13,7 +13,7 @@ const DesignerProfileScreen = ({ route, navigation }) => {
   const [location, setLocation] = useState(null);
   const [salonName, setSalonName] = useState('');
   
-  // 위치 정보를 받아오기 위한 useEffect
+  // 위치 정보를 받아오기
   useEffect(() => {
     if (route.params?.selectedLocation) {
       setLocation(route.params.selectedLocation);
@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
   },
-  
 });
 
 export default DesignerProfileScreen;

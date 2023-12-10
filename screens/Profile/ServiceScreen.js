@@ -22,15 +22,13 @@ const ServiceScreen = ({ onServicesUpdated }) => {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists() && docSnap.data().services) {
           setServices(docSnap.data().services);
-        } else {
-          console.log('No services found!');
         }
       }
     };
-
     fetchServices();
   }, []);
 
+  // 새로운 서비스 항목을 추가하는 함수
   const addServiceItem = (category) => {
     setServices({
       ...services,
@@ -38,20 +36,17 @@ const ServiceScreen = ({ onServicesUpdated }) => {
     });
   };
 
-  // 콤마가 포함된 문자열로 숫자를 포맷하는 함수
+  // 숫자를 콤마 포맷으로 변환하는 함수
   const formatNumber = (number) => {
-    // 숫자가 1000 이상일 때만 콤마를 추가합니다.
-    const num = parseInt(number, 10);
+    const num = parseInt(number, 10);   // 숫자가 1000 이상일 때만 콤마를 추가
     if (num >= 1000) {
-      // 숫자를 문자열로 변환하고, 세 자리마다 콤마를 추가합니다.
-      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');    // 숫자를 문자열로 변환하고, 세 자리마다 콤마를 추가
     }
-    return number; // 1000 미만일 경우 그대로 반환합니다.
+    return number; // 1000 미만일 경우 그대로 반환
   };
 
   const updateServiceItem = (category, index, field, value) => {
-    // 가격을 업데이트하는 경우, 콤마를 제거한 후 숫자로 변환
-    const formattedValue = field === 'price' ? formatNumber(value.replace(/,/g, '')) : value;
+    const formattedValue = field === 'price' ? formatNumber(value.replace(/,/g, '')) : value;   // 가격을 업데이트하는 경우, 콤마를 제거한 후 숫자로 변환
   
     const updatedServices = [...services[category]];
     updatedServices[index] = { ...updatedServices[index], [field]: formattedValue };
@@ -107,11 +102,11 @@ const ServiceScreen = ({ onServicesUpdated }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // ScrollView를 전체 화면으로 표시
+    flex: 1,
   },
   contentContainer: {
     padding: 10,
-    alignItems: 'flex-start', // 항목들을 왼쪽 정렬
+    alignItems: 'flex-start',
   },
   categoryTitle: {
     fontSize: 18,

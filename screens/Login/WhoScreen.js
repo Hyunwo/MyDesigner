@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 22,
-    marginBottom: 30, // 헤더와 버튼 사이 간격 조정
+    marginBottom: 30,
   },
   button: {
     width: '60%',

@@ -10,6 +10,7 @@ const SearchScreen = ({navigation}) => {
   const [results, setResults] = useState([]); // 검색 결과
 
   useEffect(() => {
+    // Firestore에서 디자이너 정보 가져오기
     const fetchDesigners = async () => {
       try {
         const querySnapshot = await getDocs(collection(firestore, 'designers'));
@@ -26,6 +27,7 @@ const SearchScreen = ({navigation}) => {
     fetchDesigners();
   }, []);
 
+  // 검색 쿼리에 따른 결과 필터링
   const handleSearch = (text) => {
     setSearchQuery(text);
     const filteredDesigners = designers.filter((designer) =>
@@ -34,6 +36,7 @@ const SearchScreen = ({navigation}) => {
     setResults(filteredDesigners); // 검색 결과를 상태로 설정
   };
 
+  // 디자이너 렌더링 함수
   const renderDesigner = ({ item }) => (
     <TouchableOpacity style={styles.designerCard} onPress={() => navigation.navigate('ReservationMenu', { designerId: item.id })}>
       <Image
@@ -86,9 +89,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
   },
-  resultsContainer: {
-    marginTop: 10,
-  },
   designerCard: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -102,18 +102,12 @@ const styles = StyleSheet.create({
     shadowRadius: 2.22,
     elevation: 3,
   },
-  designerIcon: {
-    marginRight: 10,
-  },
   designerInfo: {
     flex: 1,
   },
   designerName: {
     fontWeight: 'bold',
     fontSize: 16,
-  },
-  designerTag: {
-    color: 'grey',
   },
   designerImage: {
     width: 40,

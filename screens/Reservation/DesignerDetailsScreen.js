@@ -11,23 +11,20 @@ const DesignerDetailsScreen = ({ route }) => {
     // Firestore에서 선택된 디자이너의 정보를 가져옵니다.
     const fetchDesignerDetails = async () => {
       try {
-        console.log(`Fetching details for designer ID: ${designerId}`); // 디자이너 ID 로깅
         const designerDocRef = doc(firestore, 'designers', designerId);
         const docSnap = await getDoc(designerDocRef);
         if (docSnap.exists()) {
-          console.log('Designer details:', docSnap.data()); // 디자이너 정보 로깅
           setDesigner(docSnap.data());
         } else {
-          console.log('No such document!');
+          Alert.alert('오류', '디자이너 정보가 없습니다.');
         }
       } catch (error) {
-        console.error('Error getting document:', error);
         Alert.alert('오류', '문서를 가져오는 중 오류가 발생했습니다.');
       }
     };
 
     fetchDesignerDetails();
-  }, [designerId]);
+  }, [designerId]);   // 디자이너 ID가 변경될 때마다 실행 
 
   // 선택된 디자이너의 정보가 없다면 로딩 표시
   if (!designer) {
@@ -81,14 +78,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 20,
-  },
-  detailsContainer: {
-    marginBottom: 20,
-  },
-  detailsTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
   },
   servicesContainer: {
     marginBottom: 20,

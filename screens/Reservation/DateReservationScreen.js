@@ -13,6 +13,7 @@ const DateReservtionScreen = ({route, navigation}) => {
   const [userName, setUserName] = useState('Unknown User');
   const [unavailableTimes, setUnavailableTimes] = useState([]);
 
+  // 디자이너의 예약된 시간을 가져오는 함수
   const fetchDesignerReservations = async (designerId, selectedDate) => {
     const designerDocRef = doc(firestore, `designers/${designerId}`);
     const docSnap = await getDoc(designerDocRef);
@@ -22,38 +23,26 @@ const DateReservtionScreen = ({route, navigation}) => {
       const today = new Date();
       const selectedDateTime = new Date(selectedDate);
 
-      // 콘솔 로그로 예약 데이터 및 현재 날짜와 시간을 확인합니다.
-      console.log("예약 데이터:", reservations);
-      console.log("선택된 날짜:", selectedDate, "오늘 날짜:", today.toLocaleDateString(), "현재 시간:", today);
-
       let timesForDate = reservations
         .filter(reservation => reservation.date === selectedDate)
         .map(reservation => reservation.time);
 
-      // 선택된 날짜가 오늘 날짜 이전인 경우, 모든 시간을 사용할 수 없도록 설정합니다.
+      // 선택된 날짜가 오늘 날짜 이전인 경우, 모든 시간을 사용할 수 없도록 설정
       if (selectedDateTime < today) {
         timesForDate = times;
       } else if (selectedDate === today.toLocaleDateString()) {
-        // 선택된 날짜가 오늘 날짜와 동일하면, 현재 시간 이전의 시간대를 예약할 수 없도록 추가
+        // 선택된 날짜가 오늘 날짜와 동일하면, 현재 시간 이전의 시간대를 예약할 수 없도록 설정
         const pastTimes = times.filter(time => {
           const reservationTime = new Date(`${selectedDate} ${time}`);
           return reservationTime < today;
         });
-
-        // 콘솔 로그로 필터링된 과거 시간대를 확인합니다.
-        console.log("현재 시간 이전의 시간대:", pastTimes);
-
         timesForDate = [...timesForDate, ...pastTimes];
       }
-
-        // 최종 사용할 수 없는 시간대를 콘솔 로그로 확인합니다.
-        console.log("사용할 수 없는 시간대:", timesForDate);
         setUnavailableTimes(timesForDate);
-      } else {
-        console.log("해당 디자이너의 예약 데이터가 없습니다.");
       }
   };
 
+  // Firestore에서 현재 사용자의 이름을 가져오는 함수
   const fetchUserName = async () => {
     if (auth.currentUser) {
       const firestoreRef = doc(firestore, `users/${auth.currentUser.uid}`);
@@ -67,7 +56,7 @@ const DateReservtionScreen = ({route, navigation}) => {
   };
 
 
-  // Ensure the times array has four time slots per each row
+  // 예약 가능한 시간대 배열
   const times = ['10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00'];
 
   useEffect(() => {
@@ -87,6 +76,7 @@ const DateReservtionScreen = ({route, navigation}) => {
     getUserName();
   }, [date, route.params.designerId]);
 
+  // 날짜 선택 변경 이벤트 처리
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
@@ -100,11 +90,12 @@ const DateReservtionScreen = ({route, navigation}) => {
     setShowDatePicker(true);
   };
 
+  // 시간 선택 이벤트 처리
   const handleSelectTime = (time) => {
     setSelectedTime(time);
   };
 
-  // Render time slots in a grid layout with four slots per row
+  // 시간 슬롯 렌더링
   const renderTimeSlots = () => {
     let rows = [];
     for (let i = 0; i < times.length; i += 4) {
@@ -134,7 +125,7 @@ const DateReservtionScreen = ({route, navigation}) => {
     return rows;
   };
   
-
+  // 예약 저장 함수
   const saveReservation = async (reservationDetails) => {
     const userDocRef = doc(firestore, `users/${auth.currentUser.uid}`);
     const designerDocRef = doc(firestore, `designers/${route.params.designerId}`);
@@ -168,23 +159,23 @@ const DateReservtionScreen = ({route, navigation}) => {
     }
   };
 
+  // 다음 단계로 넘어가는 함수
   const onNextPress = () => {
     if (date && selectedTime) {
       if (!route.params.designerId) {
         console.error("designerId is undefined");
-        return; // designerId가 없으면 함수를 종료합니다.
+        return; // designerId가 없으면 함수를 종료
       }
+      //다음 화면으로 넘겨줄 파라미터들을 정의
       const paramsToPass = {
-        ...route.params, // Spread operator to pass along all previous parameters
+        ...route.params, //기존 객체의 모든 속성을 복사하여 새로운 객체에 붙여넣음
         selectedDate: date.toLocaleDateString(),
         selectedTime: selectedTime,
       };
-  
       saveReservation(paramsToPass);
-  
       navigation.navigate('FinalReservation', paramsToPass);
     } else {
-      alert("Please select both a date and a time.");
+      alert("날짜와 시간을 모두 선택해주세요.");
     }
   };
 

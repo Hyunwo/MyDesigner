@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Image } from 'react-native';
 
 const FinalReservationScreen = ({ route, navigation }) => {
-  // 상태는 사용하지 않고, route.params에서 직접 데이터를 가져옵니다.
+  // 상태 초기화: 예약 관련 정보를 저장
   const [reservationInfo, setReservationInfo] = useState({
     designerName: '',
     serviceName: '',
@@ -15,7 +15,7 @@ const FinalReservationScreen = ({ route, navigation }) => {
   });
 
   useEffect(() => {
-    // route.params로부터 받은 모든 예약 정보를 상태로 설정
+    // route.params로부터 받은 예약 정보를 상태로 설정
     if (route.params) {
       setReservationInfo({
         designerName: route.params.designerName,

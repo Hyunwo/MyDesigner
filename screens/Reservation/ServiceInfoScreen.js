@@ -22,13 +22,13 @@ const ServiceInfoScreen = ({ route, navigation }) => {
   // 파라미터로 전달된 디자이너 ID와 서비스 인덱스
   const { designerId, selectedCategory, serviceIndex } = route.params;
 
-  // 컴포넌트가 마운트될 때 Firestore에서 서비스 정보를 가져옴
+  // 컴포넌트가 마운트될 때 Firestore에서 디자이너의 서비스 정보를 가져옴
   useEffect(() => {
     const getServiceDetails = async () => {
       try {
         const designerDocRef = doc(firestore, `designers/${designerId}`);
         const designerDocSnap = await getDoc(designerDocRef);
-
+        // 문서가 존재하면 해당 서비스의 상세 정보를 state로 설정
         if (designerDocSnap.exists()) {
           const designerData = designerDocSnap.data();
           const servicesArray = designerData.services[selectedCategory];
@@ -122,27 +122,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'grey',
     marginBottom: 16,
-  },
-  details: {
-    paddingHorizontal: 16,
-  },
-  detailTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  detailRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  detailText: {
-    marginLeft: 8,
-    fontSize: 16,
-  },
-  description: {
-    fontSize: 16,
-    color: 'grey',
-    marginTop: 8,
   },
   bookingButton: {
     backgroundColor: '#007bff',

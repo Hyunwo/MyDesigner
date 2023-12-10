@@ -63,15 +63,9 @@ const MyProfileScreen = ({ navigation }) => {
 
       const imageRef = firebaseStorageRef(storage, `DesignerProfile/${auth.currentUser.uid}`);
       await uploadBytes(imageRef, blob);
-
-      // 업로드된 이미지 URL 가져오기
-      const downloadURL = await getDownloadURL(imageRef);
-
-      // Firestore에 이미지 URL 저장
-      const firestoreRef = doc(firestore, `designers/${auth.currentUser.uid}`);
+      const downloadURL = await getDownloadURL(imageRef);   // 업로드된 이미지 URL 가져오기
+      const firestoreRef = doc(firestore, `designers/${auth.currentUser.uid}`);   // Firestore에 이미지 URL 저장
       await setDoc(firestoreRef, { profileImageUrl: downloadURL }, { merge: true });
-      
-      // 상태 업데이트해서 UI에 표시
       setPhoto(downloadURL);
     }
    };
@@ -85,7 +79,7 @@ const MyProfileScreen = ({ navigation }) => {
       <View style={styles.profileSection}>
         <TouchableOpacity onPress={handleChoosePhoto}>
           <Image
-            source={photo ? { uri: photo } : require('../../assets/profile.png')} // Provide your default avatar image
+            source={photo ? { uri: photo } : require('../../assets/profile.png')} // 기본 이미지
             style={styles.avatar}
           />
         </TouchableOpacity>
@@ -117,24 +111,13 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#C4C4C4', // A placeholder color
+    backgroundColor: '#C4C4C4',
   },
   name: {
     fontSize: 24,
     fontWeight: '600',
     marginTop: 10,
     marginBottom: 5,
-  },
-  editButton: {
-    marginTop: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-    backgroundColor: '#E8E8E8', // A light grey background color for the button
-  },
-  editButtonText: {
-    fontSize: 16,
-    color: '#000000',
   },
   settingsIcon: {
     width: 24,

@@ -6,7 +6,6 @@ import * as Location from 'expo-location';
 
 const HomeScreen = ({ navigation }) => {
   const [designers, setDesigners] = useState([]);
-  const [currentLocation, setCurrentLocation] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -18,7 +17,6 @@ const HomeScreen = ({ navigation }) => {
       }
       // 현재 위치 얻기
       let location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation(location.coords);
       fetchDesigners(location.coords);
     })();
   }, []);
@@ -29,7 +27,7 @@ const HomeScreen = ({ navigation }) => {
     const fetchedDesigners = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-      distance: getDistance(coords, doc.data().location), // 거리 추가
+      distance: getDistance(coords, doc.data().location),
     }));
 
     // 사용자 위치를 기준으로 디자이너 정렬
@@ -54,6 +52,7 @@ const HomeScreen = ({ navigation }) => {
     return dist * 1.609344; // 킬로미터 단위
   }
 
+  // FlatList에서 사용할 아이템 렌더링 함수
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('ReservationMenu', { designerId: item.id })}>
       <View style={styles.textContainer}>

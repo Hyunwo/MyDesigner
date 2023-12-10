@@ -12,13 +12,25 @@ const MapScreen = ({navigation}) => {
   const [designers, setDesigners] = useState([]);
   const mapRef = useRef(null);
 
+  // 두 지점 사이의 거리를 계산하는 함수
+  const getDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      0.5 - Math.cos(dLat)/2 +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      (1 - Math.cos(dLon)) / 2;
+  
+    return R * 2 * Math.asin(Math.sqrt(a));
+  }
 
-  // 위치 권한을 요청하고 현재 위치를 가져옵니다.
+  // 위치 권한 요청 및 현재 위치 설정
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permission to access location was denied');
+        Alert.alert('위치 접근에 실패했습니다.');
         return;
       }
   
@@ -28,6 +40,7 @@ const MapScreen = ({navigation}) => {
     })();
   }, []);
 
+  // 초기 지역과 지도 지역 설정 함수
   const setInitialRegionAndRegion = (coords) => {
     const newRegion = {
       latitude: coords.latitude,
@@ -39,21 +52,44 @@ const MapScreen = ({navigation}) => {
     setRegion(newRegion);
   };
   
-
+  // Firestore에서 디자이너 목록 가져오기
   const fetchDesigners = async () => {
+    if (!initialRegion) return;
+
     try {
       const querySnapshot = await getDocs(collection(firestore, 'designers'));
-      const fetchedDesigners = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setDesigners(fetchedDesigners); // 디자이너 데이터를 상태에 저장
+      const fetchedDesigners = [];
+      querySnapshot.forEach((doc) => {
+        const designer = { id: doc.id, ...doc.data() };
+        const distance = getDistance(
+          initialRegion.latitude,
+          initialRegion.longitude,
+          designer.location.lat,
+          designer.location.lng
+        );
+        if (distance <= 5) {  // 5km
+          fetchedDesigners.push(designer);
+        }
+      });
+      setDesigners(fetchedDesigners);
     } catch (error) {
       Alert.alert("Error", "Unable to fetch designers: " + error.message);
     }
   };
+  
+  // useEffect 안에서 호출
+  useEffect(() => {
+    if (initialRegion) {
+      fetchDesigners();
+    }
+  }, [initialRegion]);
 
+  // 마커 클릭 시 선택된 디자이너 설정
   const onMarkerPress = (designer) => {
     setSelectedDesigner(designer); // 선택된 디자이너 정보를 상태에 저장
   };
 
+  // 예약 버튼 클릭 처리
   const onBookPress = () => {
     if (selectedDesigner) {
       navigation.navigate('ReservationMenu', {
@@ -62,28 +98,23 @@ const MapScreen = ({navigation}) => {
     }
   };
 
-  const searchInThisArea = () => {
-    if (mapRef.current) {
-      mapRef.current.getCamera().then(camera => {
-        // 현재 지도의 뷰포트를 사용하여 새로운 지역 설정
-        const newRegion = {
-          latitude: camera.center.latitude,
-          longitude: camera.center.longitude,
-          latitudeDelta: camera.latitudeDelta,
-          longitudeDelta: camera.longitudeDelta,
-        };
-        setRegion(newRegion); // 지도의 현재 지역 상태를 업데이트
-        fetchDesignersInRegion(newRegion); // 해당 지역 내의 디자이너들을 다시 불러옴
-      });
-    }
-  };
-
-  const fetchDesignersInRegion = async (region) => {
+  // 지도의 현재 지역 기반으로 디자이너 재검색
+  const fetchDesignersInRegion = async (newRegion) => {
     try {
-      // Firestore에서 디자이너 정보를 불러오는 로직
-      // 필요에 따라 지역 기반으로 디자이너 목록을 필터링하는 로직 추가
       const querySnapshot = await getDocs(collection(firestore, 'designers'));
-      const fetchedDesigners = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const fetchedDesigners = [];
+      querySnapshot.forEach((doc) => {
+        const designer = { id: doc.id, ...doc.data() };
+        const distance = getDistance(
+          newRegion.latitude,
+          newRegion.longitude,
+          designer.location.lat,
+          designer.location.lng
+        );
+        if (distance <= 5) { // 5km 범위로 필터링
+          fetchedDesigners.push(designer);
+        }
+      });
       setDesigners(fetchedDesigners);
     } catch (error) {
       Alert.alert("Error", "Unable to fetch designers: " + error.message);
@@ -93,6 +124,22 @@ const MapScreen = ({navigation}) => {
   // 현재 위치로 지도를 이동시키는 함수
   const goToInitialLocation = () => {
     mapRef.current.animateToRegion(initialRegion, 1000); // 1000ms 동안 애니메이션을 수행하며 초기 위치로 이동
+  };
+
+  // 이 지역 재검색 버튼 클릭 시 실행되는 함수
+  const searchInThisArea = () => {
+    if (mapRef.current && region) {
+      mapRef.current.getCamera().then(camera => {
+        const newRegion = {
+          latitude: camera.center.latitude,
+          longitude: camera.center.longitude,
+          latitudeDelta: camera.latitudeDelta,
+          longitudeDelta: camera.longitudeDelta,
+        };
+        setRegion(newRegion);
+        fetchDesignersInRegion(newRegion);
+      });
+    }
   };
 
   // 지도와 마커를 렌더링하는 UI 부분
@@ -144,7 +191,6 @@ const MapScreen = ({navigation}) => {
   );
 };
 
-// 스타일 정의
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -195,7 +241,6 @@ const styles = StyleSheet.create({
   bookButtonText: {
     color: 'white',
   },
-
 });
 
 export default MapScreen;
