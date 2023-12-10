@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { firestore } from '../../config/firebaseConfig';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import * as Location from 'expo-location';
 
 const HomeScreen = ({ navigation }) => {
@@ -21,18 +21,20 @@ const HomeScreen = ({ navigation }) => {
     })();
   }, []);
 
-  const fetchDesigners = async (coords) => {
-    // Firestore에서 디자이너 정보 가져오기
-    const querySnapshot = await getDocs(collection(firestore, 'designers'));
-    const fetchedDesigners = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      distance: getDistance(coords, doc.data().location),
-    }));
+  const fetchDesigners = (coords) => {
+    // Firestore에서 디자이너 정보 실시간으로 가져오기
+    const unsubscribe = onSnapshot(collection(firestore, 'designers'), (querySnapshot) => {
+      const fetchedDesigners = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        distance: getDistance(coords, doc.data().location),
+      }));
+      // 사용자 위치를 기준으로 디자이너 정렬
+      fetchedDesigners.sort((a, b) => a.distance - b.distance);
+      setDesigners(fetchedDesigners);
+    });
 
-    // 사용자 위치를 기준으로 디자이너 정렬
-    fetchedDesigners.sort((a, b) => a.distance - b.distance);
-    setDesigners(fetchedDesigners);
+    return unsubscribe;
   };
 
   // 두 위치 사이의 거리 계산

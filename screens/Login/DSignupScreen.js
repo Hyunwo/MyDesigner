@@ -49,7 +49,7 @@ const DesignerProfileScreen = ({ route, navigation }) => {
       navigation.goBack();
     } catch (error) {
       console.error('프로필 저장 오류:', error);
-      Alert.alert('오류', '프로필 저장 중 오류가 발생했습니다.');
+      Alert.alert('오류', '올바른 이메일 형식과 비밀번호 6자리 이상으로 입력해주세요.');
     }
   };
 
