@@ -26,7 +26,7 @@
 
 - 위치 기반으로 지도에서 주변 디자이너 검색
 <div align="center">
-  <img width="55%" src="https://github.com/Hyunwo/MyDesigner/assets/75519996/7517576b-75b9-4fb8-88e6-16cd20fdb802">
+  <img width="35%" src="https://github.com/Hyunwo/MyDesigner/assets/75519996/7517576b-75b9-4fb8-88e6-16cd20fdb802">
 </div>
 - 검색으로 디자이너 찾기
 <div align="center">
