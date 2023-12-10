@@ -19,7 +19,7 @@ const ServiceInfoScreen = ({ route, navigation }) => {
   // 좋아요 수를 담을 상태
   const [likes, setLikes] = useState(0);
 
-  // route 파라미터에서 디자이너 ID와 선택된 서비스 카테고리 및 인덱스를 추출
+  // 파라미터로 전달된 디자이너 ID와 서비스 인덱스
   const { designerId, selectedCategory, serviceIndex } = route.params;
 
   // 컴포넌트가 마운트될 때 Firestore에서 서비스 정보를 가져옴
@@ -27,17 +27,15 @@ const ServiceInfoScreen = ({ route, navigation }) => {
     const getServiceDetails = async () => {
       try {
         const designerDocRef = doc(firestore, `designers/${designerId}`);
-        const designerDocSnap = await getDoc(designerDocRef);  // 디자이너 문서 스냅샷 가져오기
+        const designerDocSnap = await getDoc(designerDocRef);
 
         if (designerDocSnap.exists()) {
           const designerData = designerDocSnap.data();
-          console.log("Designer data:", designerData);
           const servicesArray = designerData.services[selectedCategory];
           if (servicesArray && serviceIndex < servicesArray.length) {
             const selectedService = servicesArray[serviceIndex];
-            console.log("Selected service:", selectedService);
             if (selectedService) {
-              // 선택된 서비스가 존재하는 경우 상태 업데이트
+              // 서비스 정보를 상태에 저장
               setServiceDetails({
                 serviceName: selectedService.name,
                 price: selectedService.price,
