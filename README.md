@@ -28,15 +28,19 @@
 <div align="left">
   <img width="30%" src="https://github.com/Hyunwo/MyDesigner/assets/75519996/7517576b-75b9-4fb8-88e6-16cd20fdb802">
 </div>
+<br/>
+
 - 검색으로 디자이너 찾기
 <div align="left">
   <img width="30%" src="https://github.com/Hyunwo/MyDesigner/assets/75519996/70decfd6-e05d-4bf4-a287-3e0c23e42267">
 </div>
+<br/>
+
 - 홈에서 바로 예약
 <div align="left">
   <img width="30%" src="https://github.com/Hyunwo/MyDesigner/assets/75519996/68ae94ad-89a1-43c4-af61-6928a950829c">
 </div>
-
+<br/>
 ### Designer
 
 - 고객이 예약하면 실시간으로 디자이너 예약현황에 출력
@@ -44,10 +48,12 @@
   <img width="30%" src="https://github.com/Hyunwo/MyDesigner/assets/75519996/c0b3afb4-94fb-49dc-a94e-015fdcd8332c">
 </div>
 
+<br/>
 - 프로필에서 스타일 및 가격 등록
 <div align="left">
   <img width="30%" src="https://github.com/Hyunwo/MyDesigner/assets/75519996/e7f94083-08e4-4282-b7ee-6f0be665a038">
 </div>
+<br/>
 
 ## Built With
 
