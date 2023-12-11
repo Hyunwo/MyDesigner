@@ -92,7 +92,7 @@ const DesignerProfileScreen = ({ route, navigation }) => {
         value={salonName}
         editable={false}
       />
-      <Button title="지도에서 선택" onPress={() => navigation.navigate('MapSelector', { setLocation, setSalonName })} />
+      <Button title="지도에서 선택" onPress={() => navigation.navigate('MapSelector')} />
       <View style={{ marginVertical: 10 }} />
       <Button title="저장" onPress={handleSaveProfile} />
     </View>
