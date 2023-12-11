@@ -58,7 +58,8 @@
 
 ## Built With
 
-- [React Native Expo](https://expo.dev/)
+- [React Native](https://reactnative.dev/)
+- [Expo](https://expo.dev/)
 - [Firebase](https://firebase.google.com/)
 
 ## Architecture
