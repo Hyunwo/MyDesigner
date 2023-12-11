@@ -4,9 +4,9 @@ import MapView, { Marker } from 'react-native-maps';
 import { GOOGLE_PLACES_API_KEY } from '@env';
 
 const MapSelectorScreen = ({ route, navigation }) => {
-  const { setLocation, setSalonName } = route.params;   // 상위 컴포넌트에서 전달받은 파라미터
   const [searchQuery, setSearchQuery] = useState('');   // 검색 쿼리 상태
   const [selectedLocation, setSelectedLocation] = useState(null);   // 선택된 위치 상태
+  const [selectedSalonName, setSelectedSalonName] = useState('');
   const [loading, setLoading] = useState(false);    // 로딩 상태
   const [salons, setSalons] = useState([]); // 검색된 헤어샵 목록 상태
 
@@ -29,16 +29,16 @@ const MapSelectorScreen = ({ route, navigation }) => {
   // 위치 확정 및 저장 처리 함수
   const confirmLocation = () => {
     if (selectedLocation) {
-      navigation.navigate('DSignUp', { selectedLocation });
+      navigation.navigate('DSignUp', { selectedLocation, salonName: selectedSalonName });
     } else {
-      Alert.alert('위치 선택', '헤어샵의 위치를 선택해주세요.');    // 위치 선택 알림
+      Alert.alert('위치 선택', '헤어샵의 위치를 선택해주세요.');
     }
   };
 
   // 헤어샵 선택 처리 함수
   const selectSalon = (salon) => {
     setSelectedLocation(salon.geometry.location); // 선택된 헤어샵의 위치 상태 업데이트
-    setSalonName(salon.name); // 선택된 헤어샵의 이름 상태 업데이트
+    setSelectedSalonName(salon.name);// 선택된 헤어샵의 이름 상태 업데이트
   };
 
   return (
